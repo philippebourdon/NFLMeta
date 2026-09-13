@@ -1,0 +1,12 @@
+{
+  "name": "nflmeta-public-source",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "test": "tsc -p sdk/typescript/tsconfig.json && node --test sdk/typescript/test/*.test.mjs"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "@types/node": "20.19.0"
+  }
+}

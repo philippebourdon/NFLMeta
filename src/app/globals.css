@@ -1,0 +1,269 @@
+@import "tailwindcss";
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+  overflow-x: clip;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+}
+
+[data-clerk-component] {
+  color: #eef6ff;
+}
+
+[data-clerk-component] :is(
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  span,
+  div,
+  label,
+  button,
+  a,
+  small,
+  strong,
+  li
+) {
+  color: inherit !important;
+}
+
+[data-clerk-component] input,
+[data-clerk-component] textarea,
+[data-clerk-component] select {
+  color: #eef6ff !important;
+}
+
+[data-clerk-component] ::placeholder {
+  color: #9ebddb !important;
+}
+
+[data-clerk-component] [role="dialog"],
+[data-clerk-component] [role="menu"],
+[data-clerk-component] [role="tabpanel"],
+[data-clerk-component] [role="tab"] {
+  color: #eef6ff;
+}
+
+/* Clerk account/profile surfaces need stronger overrides than the generic theme hooks. */
+[data-clerk-component] nav,
+[data-clerk-component] aside,
+[data-clerk-component] section,
+[data-clerk-component] article,
+[data-clerk-component] [role="navigation"],
+[data-clerk-component] [role="tablist"],
+[data-clerk-component] [role="tab"],
+[data-clerk-component] [role="tabpanel"] {
+  color: #eef6ff !important;
+}
+
+[data-clerk-component] :is(
+  p,
+  span,
+  small,
+  label,
+  a,
+  div
+):not(code):not(pre) {
+  color: #d9eafc !important;
+}
+
+[data-clerk-component] :is(h1, h2, h3, h4, h5, h6, strong) {
+  color: #f4f9ff !important;
+}
+
+[data-clerk-component] a {
+  color: #9ed0ff !important;
+}
+
+[data-clerk-component] button,
+[data-clerk-component] [role="button"] {
+  color: #eef6ff !important;
+}
+
+[data-clerk-component] button:not([disabled]),
+[data-clerk-component] [role="button"]:not([aria-disabled="true"]) {
+  border: 1px solid rgba(132, 183, 237, 0.34) !important;
+}
+
+[data-clerk-component] button:disabled,
+[data-clerk-component] [aria-disabled="true"] {
+  color: #9ebddb !important;
+  opacity: 0.82 !important;
+}
+
+[data-clerk-component] [role="tab"],
+[data-clerk-component] nav button,
+[data-clerk-component] aside button {
+  color: #eef6ff !important;
+  background: rgba(10, 28, 46, 0.78) !important;
+}
+
+[data-clerk-component] [aria-selected="true"],
+[data-clerk-component] [data-active="true"] {
+  color: #ffffff !important;
+  background: rgba(23, 58, 93, 0.92) !important;
+}
+
+[data-clerk-component] input,
+[data-clerk-component] textarea,
+[data-clerk-component] select {
+  background: rgba(13, 34, 56, 0.96) !important;
+  border: 1px solid rgba(113, 165, 219, 0.38) !important;
+}
+
+[data-clerk-component] [type="file"]::file-selector-button {
+  margin-right: 12px;
+  border: 1px solid rgba(132, 183, 237, 0.42);
+  border-radius: 999px;
+  background: linear-gradient(180deg, #4ca2f2, #2c6eb4);
+  color: #f4f9ff;
+  padding: 8px 14px;
+}
+
+[data-clerk-component] table {
+  width: 100%;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  overflow: hidden;
+  border-radius: 16px !important;
+}
+
+[data-clerk-component] [role="table"],
+[data-clerk-component] [role="grid"] {
+  overflow: hidden;
+  border-radius: 18px !important;
+}
+
+[data-clerk-component] tr:first-child th:first-child,
+[data-clerk-component] tr:first-child td:first-child {
+  border-top-left-radius: 16px !important;
+}
+
+[data-clerk-component] tr:first-child th:last-child,
+[data-clerk-component] tr:first-child td:last-child {
+  border-top-right-radius: 16px !important;
+}
+
+[data-clerk-component] tr:last-child td:first-child,
+[data-clerk-component] tr:last-child th:first-child {
+  border-bottom-left-radius: 16px !important;
+}
+
+[data-clerk-component] tr:last-child td:last-child,
+[data-clerk-component] tr:last-child th:last-child {
+  border-bottom-right-radius: 16px !important;
+}
+
+[data-clerk-component] [role="row"] > :first-child,
+[data-clerk-component] [role="row"] > [role="cell"]:first-child,
+[data-clerk-component] [role="row"] > [role="gridcell"]:first-child {
+  border-top-left-radius: 16px !important;
+  border-bottom-left-radius: 16px !important;
+}
+
+[data-clerk-component] [role="row"] > :last-child,
+[data-clerk-component] [role="row"] > [role="cell"]:last-child,
+[data-clerk-component] [role="row"] > [role="gridcell"]:last-child {
+  border-top-right-radius: 16px !important;
+  border-bottom-right-radius: 16px !important;
+}
+
+[data-clerk-component] th,
+[data-clerk-component] td {
+  background: rgba(10, 28, 46, 0.78) !important;
+}
+
+[data-clerk-component] [role="cell"],
+[data-clerk-component] [role="gridcell"] {
+  background: rgba(10, 28, 46, 0.78) !important;
+  border-radius: 16px !important;
+}
+
+.account-clerk-shell [data-clerk-component] [class*="profileSection"],
+.account-clerk-shell [data-clerk-component] [class*="profilePage"] [class*="profileSection"],
+.account-clerk-shell [data-clerk-component] [class*="profileSection"] > div,
+.account-clerk-shell [data-clerk-component] [class*="profileSection"] > div > div,
+.account-clerk-shell [data-clerk-component] [class*="accordion"] > div,
+.account-clerk-shell [data-clerk-component] [class*="accordion"] > div > div {
+  border-radius: 18px !important;
+  overflow: hidden !important;
+}
+
+.account-clerk-shell [data-clerk-component] [class*="profileSection"] > div,
+.account-clerk-shell [data-clerk-component] [class*="accordion"] > div {
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+}
+
+.account-clerk-shell [data-clerk-component] td,
+.account-clerk-shell [data-clerk-component] th,
+.account-clerk-shell [data-clerk-component] [role="cell"],
+.account-clerk-shell [data-clerk-component] [role="gridcell"],
+.account-clerk-shell [data-clerk-component] [role="columnheader"],
+.account-clerk-shell [data-clerk-component] [class*="profileSection"] > div > div {
+  padding-left: 14px !important;
+  padding-right: 14px !important;
+}
+
+.account-clerk-shell [data-clerk-component] [class*="profileSection"] > div:first-child > div:first-child,
+.account-clerk-shell [data-clerk-component] [class*="profileSection"] > div:first-child > div:last-child,
+.account-clerk-shell [data-clerk-component] [class*="profileSection"] > div:last-child > div:first-child,
+.account-clerk-shell [data-clerk-component] [class*="profileSection"] > div:last-child > div:last-child {
+  border-radius: 18px !important;
+}
+
+.account-page-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.account-page-heading h1 {
+  margin-top: 0;
+}
+
+.account-sign-out-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid rgba(144, 184, 226, 0.45);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(22, 54, 87, 0.96), rgba(9, 26, 45, 0.98));
+  color: #eef6ff;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.account-sign-out-button:hover,
+.account-sign-out-button:focus-visible {
+  border-color: rgba(173, 210, 247, 0.74);
+  background: linear-gradient(180deg, rgba(34, 78, 123, 0.98), rgba(12, 36, 62, 0.98));
+  color: #ffffff;
+}
+
+@media (max-width: 680px) {
+  .account-page-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,740 @@
+.page {
+  --ink: #eef3f9;
+  --muted: #9cb0c5;
+  min-height: 100vh;
+  padding: 28px 20px 72px;
+  background: transparent;
+  color: var(--ink);
+}
+
+.hero,
+.grid,
+.fullWidthSection {
+  max-width: 1260px;
+  margin: 0 auto;
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 34px;
+  background: linear-gradient(180deg, rgba(32, 45, 62, 0.96), rgba(19, 29, 42, 0.97));
+}
+
+.heroMain {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr) 240px;
+  gap: 24px;
+  align-items: center;
+}
+
+.headshotWrap {
+  position: relative;
+  height: 292px;
+  border-radius: 28px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(var(--team-rgb), 0.82), rgba(var(--team-rgb), 0.58));
+}
+
+.headshot {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.headshotFallback {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.headshotUploadForm {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+}
+
+.headshotUploadButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(11, 18, 28, 0.78);
+  color: rgba(247, 250, 252, 0.96);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.22);
+  transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+}
+
+.headshotUploadButton:hover {
+  transform: translateY(-1px);
+  background: rgba(18, 28, 42, 0.92);
+  border-color: rgba(255, 255, 255, 0.32);
+}
+
+.kicker,
+.eyebrow {
+  margin: 0 0 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: rgba(255, 204, 0, 0.88);
+}
+
+.identity h1,
+.card h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.identity {
+  min-width: 0;
+}
+
+.identity h1,
+.heroName {
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  line-height: 1.02;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+  padding-bottom: 0.08em;
+}
+
+.identityMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.identityMeta > span {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: #f2f6fb;
+}
+
+.identityMeta > a,
+.identityMetaLink {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: #f2f6fb;
+  text-decoration: none;
+}
+
+.identityMeta > a:hover,
+.identityMetaLink:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.identityMeta > .heroStatusText {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: #f2f6fb;
+}
+
+.heroStatusCode {
+  display: inline-flex;
+  margin-left: 0.35rem;
+}
+
+.statusInline {
+  display: inline;
+  font-size: 0.98rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  color: rgba(255, 214, 88, 0.96);
+}
+
+.statusTooltip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: help;
+}
+
+.statusTooltipBubble {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  transform: translateX(-50%) translateY(4px);
+  min-width: max-content;
+  max-width: 220px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  background: rgba(12, 20, 29, 0.96);
+  color: #f5f9fd;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease, transform 120ms ease;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+  z-index: 10;
+}
+
+.missingFieldHint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+  color: rgba(255, 210, 118, 0.94);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+}
+
+.missingFieldEditor {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.missingFieldInput {
+  min-width: 148px;
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(8, 14, 22, 0.9);
+  color: #f7f9fb;
+  font: inherit;
+  font-size: 0.82rem;
+}
+
+.missingFieldSave,
+.missingFieldCancel {
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.missingFieldSave {
+  border: 1px solid rgba(255, 210, 118, 0.34);
+  background: rgba(255, 210, 118, 0.16);
+  color: rgba(255, 226, 167, 0.98);
+}
+
+.missingFieldCancel {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(233, 239, 244, 0.92);
+}
+
+.missingFieldError {
+  color: rgba(255, 136, 136, 0.96);
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.statusTooltip:hover .statusTooltipBubble,
+.statusTooltip:focus-within .statusTooltipBubble {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.identityMeta .hallOfFameBadge {
+  background: linear-gradient(180deg, rgba(196, 147, 25, 0.95), rgba(140, 100, 12, 0.94));
+  color: #fff8e0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-weight: 800;
+}
+
+.highlights {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.highlights div,
+.factGrid div,
+.heroRail,
+.honorSummary div,
+.accoladePanel {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.highlights div {
+  padding: 10px 14px 9px;
+  text-align: center;
+  overflow: visible;
+}
+
+.highlights span,
+.factGrid span,
+.railCopy span {
+  display: block;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.highlights span {
+  white-space: nowrap;
+  text-align: center;
+  margin-bottom: 4px;
+  line-height: 1.05;
+}
+
+.highlights strong {
+  display: block;
+  text-align: center;
+  line-height: 1;
+  font-size: 1.05rem;
+  overflow: visible;
+  position: relative;
+  z-index: 1;
+}
+
+.highlights strong,
+.factGrid strong,
+.railCopy strong,
+.draftMeta strong {
+  color: var(--ink);
+}
+
+.highlights .missingFieldEditor {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.36rem;
+}
+
+.highlights .missingFieldInput {
+  min-width: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.highlights .missingFieldSave,
+.highlights .missingFieldCancel {
+  width: 100%;
+  justify-content: center;
+}
+
+.heroRail {
+  display: grid;
+  gap: 16px;
+  justify-items: center;
+  min-height: 292px;
+  padding: 22px 18px;
+}
+
+.heroTeamLink {
+  display: grid;
+  gap: 16px;
+  justify-items: center;
+  width: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+.teamLogo {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.28));
+}
+
+.railCopy {
+  text-align: center;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 22px;
+}
+
+.fullWidthSection {
+  margin-top: 18px;
+}
+
+.card {
+  padding: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(34, 48, 66, 0.95), rgba(21, 31, 45, 0.97));
+}
+
+.factGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.coverageNote {
+  margin: 12px 2px 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.factGrid div {
+  padding: 14px 16px;
+}
+
+.bioGrid div,
+.bioGrid span,
+.bioGrid strong {
+  text-align: center;
+}
+
+.careerGrid div,
+.careerGrid span,
+.careerGrid strong {
+  text-align: center;
+}
+
+.draftGrid div,
+.draftGrid span,
+.draftGrid strong {
+  text-align: center;
+}
+
+.draftBand {
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  margin-top: 18px;
+}
+
+.draftBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 82px;
+  border-radius: 22px;
+  background: rgb(var(--team-rgb));
+  color: #fff9f1;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.draftMeta {
+  display: grid;
+  gap: 6px;
+}
+
+.draftMeta span {
+  color: var(--muted);
+}
+
+.honorSummary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.honorSummary span {
+  display: block;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.64rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+.honorSummary strong {
+  display: block;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.accoladeColumns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.awardsSection {
+  margin-top: 14px;
+}
+
+.awardGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.awardCard {
+  padding: 11px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.awardCardHeader {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: start;
+}
+
+.awardCardHeader h4 {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.15;
+}
+
+.awardCardHeader strong {
+  display: inline-flex;
+  min-width: 28px;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: rgba(24, 54, 86, 0.88);
+  color: #eef6ff;
+  font-size: 0.82rem;
+}
+
+.awardCard p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.25;
+}
+
+.accoladePanel {
+  padding: 11px 12px;
+}
+
+.accoladeHeader {
+  display: grid;
+  gap: 3px;
+}
+
+.accoladeHeader h3 {
+  margin: 0;
+  font-size: 0.92rem;
+}
+
+.accoladeHeader span {
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.25;
+}
+
+.yearStrip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.yearStrip span {
+  display: inline-flex;
+  min-height: 24px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(24, 54, 86, 0.88);
+  color: #eef6ff;
+  font-weight: 700;
+  font-size: 0.71rem;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.tableWrap {
+  margin-top: 18px;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: left;
+}
+
+.table th {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.rosterTeamCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.rosterTeamWordmark {
+  width: 148px;
+  max-width: 100%;
+  height: 28px;
+  object-fit: contain;
+  object-position: center;
+}
+
+.rosterYearsPill {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(var(--stint-rgb), 0.96), rgba(var(--stint-rgb), 0.74));
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #f8fbff;
+  font-weight: 800;
+  font-size: 0.74rem;
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.teamColumn {
+  text-align: center !important;
+}
+
+.statusColumn {
+  text-align: center !important;
+  padding-left: 26px !important;
+  min-width: 180px;
+}
+
+.rosterCard {
+  background: linear-gradient(180deg, rgba(45, 60, 80, 0.98), rgba(31, 42, 58, 0.98));
+  border-color: rgba(141, 165, 194, 0.28);
+  color: #d9e3ef;
+}
+
+.rosterCard h2,
+.rosterCard strong,
+.rosterCard td,
+.rosterCard .eyebrow {
+  color: #e6edf6;
+}
+
+.rosterCard .eyebrow {
+  color: rgba(141, 103, 7, 0.95);
+}
+
+.rosterCard .table th {
+  color: rgba(187, 203, 222, 0.82);
+}
+
+.rosterCard .table th,
+.rosterCard .table td {
+  border-bottom: 1px solid rgba(118, 139, 164, 0.26);
+}
+
+.empty {
+  padding: 48px 20px;
+}
+
+@media (max-width: 1080px) {
+  .heroMain,
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .highlights,
+  .factGrid,
+  .honorSummary,
+  .accoladeColumns,
+  .awardGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .yearStrip {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .heroRail {
+    justify-items: start;
+  }
+}
+
+@media (max-width: 720px) {
+  .page {
+    padding: 18px 14px 56px;
+  }
+
+  .hero,
+  .card {
+    padding: 18px;
+  }
+
+  .highlights,
+  .factGrid,
+  .honorSummary,
+  .accoladeColumns,
+  .awardGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .yearStrip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .identity h1 {
+    font-size: 2.5rem;
+  }
+}

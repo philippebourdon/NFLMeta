@@ -1,0 +1,239 @@
+.page {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  gap: 18px;
+  padding: 24px 0 32px;
+}
+
+.page::before {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  inset: 0 auto 0 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  background:
+    radial-gradient(circle at 82% 0, rgba(var(--team-rgb), 0.3), transparent 36%),
+    radial-gradient(circle at 12% 30%, rgba(88, 161, 255, 0.14), transparent 44%),
+    linear-gradient(180deg, rgba(8, 19, 34, 0.98), rgba(5, 13, 24, 1));
+}
+
+.heroCard,
+.contentCard {
+  border-radius: 22px;
+  border: 1px solid rgba(79, 119, 164, 0.56);
+  background:
+    radial-gradient(circle at 84% -18%, rgba(var(--team-rgb), 0.22), transparent 38%),
+    linear-gradient(180deg, rgba(16, 38, 63, 0.94), rgba(10, 25, 43, 0.96));
+  box-shadow: 0 18px 36px rgba(2, 9, 22, 0.35);
+}
+
+.heroCard {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr) 280px;
+  gap: 18px;
+  padding: 20px;
+  align-items: start;
+}
+
+.heroImageWrap {
+  width: 320px;
+  height: 220px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(5, 14, 25, 0.82);
+}
+
+.heroImage {
+  width: 320px;
+  height: 220px;
+  object-fit: cover;
+  object-position: center 20%;
+}
+
+.heroFallback {
+  width: 320px;
+  height: 220px;
+  display: grid;
+  place-items: center;
+  color: #f6fbff;
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.heroBody {
+  display: grid;
+  gap: 12px;
+}
+
+.badgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.badge,
+.metaGrid span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(151, 191, 231, 0.42);
+  background: rgba(18, 43, 72, 0.76);
+  color: #d8ecff;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.heroBody h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.02;
+}
+
+.roleTitle {
+  margin: -4px 0 0;
+  color: #d7e9fb;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.description,
+.contentCard p,
+.listBlock p {
+  margin: 0;
+  color: #bfd8f2;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.heroLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.secondaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 13px;
+  background: rgba(12, 28, 46, 0.84);
+  border: 1px solid rgba(102, 141, 184, 0.44);
+  color: #dceefe;
+}
+
+.teamCard {
+  display: grid;
+  gap: 14px;
+}
+
+.teamCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.teamCardHeader strong {
+  display: block;
+  color: #f5fbff;
+  font-size: 1.35rem;
+}
+
+.teamCardHeader p {
+  margin: 4px 0 0;
+  color: #a9caea;
+}
+
+.teamLogo,
+.teamFallback {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+}
+
+.teamFallback {
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: rgba(5, 14, 25, 0.8);
+  color: #f5fbff;
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+.metaGrid {
+  display: grid;
+  gap: 10px;
+}
+
+.metaGrid div {
+  border-radius: 16px;
+  border: 1px solid rgba(90, 131, 177, 0.44);
+  background: rgba(10, 27, 45, 0.74);
+  padding: 12px 13px;
+}
+
+.metaGrid strong {
+  display: block;
+  margin-top: 6px;
+  color: #f1f8ff;
+  font-size: 0.98rem;
+  line-height: 1.4;
+}
+
+.contentCard {
+  padding: 20px;
+  display: grid;
+  gap: 12px;
+}
+
+.contentCard h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #f3f9ff;
+}
+
+.listBlock {
+  display: grid;
+  gap: 10px;
+}
+
+.biographyBlock {
+  display: grid;
+  gap: 14px;
+}
+
+@media (max-width: 1120px) {
+  .heroCard {
+    grid-template-columns: 320px minmax(0, 1fr);
+  }
+
+  .teamCard {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 780px) {
+  .heroCard {
+    grid-template-columns: 1fr;
+  }
+
+  .heroImageWrap,
+  .heroImage,
+  .heroFallback {
+    width: 100%;
+    height: auto;
+    min-height: 220px;
+  }
+}

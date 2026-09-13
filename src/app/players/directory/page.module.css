@@ -1,0 +1,8 @@
+.directory { padding: 28px 0; }
+.directory a { color: #9acbff; text-decoration: underline; text-underline-offset: 3px; }
+.pages { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0; }
+.pages a { padding: 8px 12px; border: 1px solid #526580; border-radius: 6px; }
+.pages a[aria-current="page"] { background: #153b62; color: white; font-weight: 700; }
+.players { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; padding: 0; list-style: none; }
+.players li { display: grid; align-content: start; gap: 5px; }
+.players span { font-size: .85rem; color: #b9c5d6; }

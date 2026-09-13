@@ -1,0 +1,250 @@
+.page {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  gap: 18px;
+  padding: 28px 0 36px;
+}
+
+.page::before {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  inset: 0 auto 0 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  background:
+    radial-gradient(circle at 82% 10%, rgba(255, 189, 102, 0.62) 0%, rgba(91, 164, 255, 0.26) 30%, rgba(13, 30, 60, 0.84) 68%, rgba(6, 14, 30, 0.96) 100%),
+    linear-gradient(180deg, rgba(8, 17, 39, 0.98), rgba(4, 10, 22, 1));
+}
+
+.page::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0 auto 0 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  background:
+    linear-gradient(152deg, rgba(255, 200, 124, 0.16) 0 16%, rgba(0, 0, 0, 0) 16% 100%),
+    radial-gradient(circle at 18% 38%, rgba(86, 150, 241, 0.16), rgba(0, 0, 0, 0) 34%);
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(240px, 0.72fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+.card,
+.panel,
+.actionCard {
+  border-radius: 20px;
+  border: 1px solid rgba(87, 128, 171, 0.54);
+  background: linear-gradient(180deg, rgba(16, 38, 62, 0.92), rgba(9, 22, 39, 0.96));
+  box-shadow: 0 18px 34px rgba(2, 8, 19, 0.34);
+}
+
+.heroCard {
+  padding: 28px;
+}
+
+.heroTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(160, 201, 244, 0.48);
+  background: rgba(22, 52, 83, 0.74);
+  color: #dbedff;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.codeBadge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 205, 139, 0.42);
+  background: rgba(89, 46, 10, 0.32);
+  color: #ffd9aa;
+  font-family: var(--font-ibm-mono), SFMono-Regular, Menlo, monospace;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.1rem);
+  letter-spacing: -0.03em;
+}
+
+.message {
+  margin: 12px 0 0;
+  max-width: 70ch;
+  color: #c8def4;
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.metaPill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(142, 181, 220, 0.36);
+  background: rgba(16, 37, 60, 0.78);
+  color: #d5e9fc;
+  font-size: 12px;
+}
+
+.visualCard {
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  overflow: hidden;
+  position: relative;
+}
+
+.visualCard::before {
+  content: "";
+  position: absolute;
+  inset: 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(132, 177, 224, 0.2);
+  background:
+    radial-gradient(circle at 50% 18%, rgba(112, 184, 255, 0.18), rgba(0, 0, 0, 0) 38%),
+    linear-gradient(180deg, rgba(20, 47, 76, 0.64), rgba(10, 26, 44, 0.26));
+}
+
+.visualStack {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 18px;
+  justify-items: center;
+}
+
+.logo {
+  width: min(320px, 100%);
+  height: auto;
+}
+
+.shield {
+  width: 74px;
+  height: 90px;
+  object-fit: contain;
+  opacity: 0.94;
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: 14px;
+}
+
+.panel {
+  padding: 18px;
+}
+
+.panel h2,
+.actionCard h3 {
+  margin: 0;
+}
+
+.list {
+  margin: 12px 0 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 8px;
+  color: #d5e8fb;
+  line-height: 1.6;
+}
+
+.actionGrid {
+  display: grid;
+  gap: 12px;
+}
+
+.actionCard {
+  padding: 16px;
+}
+
+.actionCard p {
+  margin: 8px 0 0;
+  color: #c6def4;
+  line-height: 1.6;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.primaryAction,
+.secondaryAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 999px;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.primaryAction {
+  border: 1px solid #7cb3ec;
+  background: linear-gradient(180deg, #4ca2f2, #2c6eb4);
+  color: #f1f8ff;
+}
+
+.secondaryAction {
+  border: 1px solid rgba(145, 185, 226, 0.56);
+  background: rgba(19, 46, 75, 0.78);
+  color: #d8ecff;
+}
+
+@media (max-width: 1000px) {
+  .hero,
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .heroCard,
+  .panel,
+  .actionCard,
+  .visualCard {
+    padding: 18px;
+  }
+}

@@ -1,0 +1,9 @@
+.directory { padding: 28px 0; }
+.directory a { color: #9acbff; text-decoration: underline; text-underline-offset: 3px; }
+.seasons { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0; }
+.seasons a { padding: 8px 12px; border: 1px solid #526580; border-radius: 6px; }
+.seasons a[aria-current="page"] { background: #153b62; color: white; font-weight: 700; }
+.tableWrap { overflow-x: auto; }
+.tableWrap table { width: 100%; border-collapse: collapse; }
+.tableWrap th, .tableWrap td { padding: 12px; text-align: left; border-bottom: 1px solid #526580; }
+.tableWrap th { color: #b9c5d6; }

@@ -1,0 +1,41 @@
+{
+  "name": "@nflmeta/sdk",
+  "version": "0.1.4",
+  "description": "Official TypeScript SDK for the NFLMeta API",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "LICENSE",
+    "README.md",
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "nfl",
+    "football",
+    "statistics",
+    "api",
+    "sdk",
+    "sports-data"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/philippebourdon/NFLMeta.git",
+    "directory": "sdk/typescript"
+  },
+  "homepage": "https://nflmeta.org/api-docs/sdk",
+  "bugs": {
+    "url": "https://nflmeta.org/requests"
+  }
+}

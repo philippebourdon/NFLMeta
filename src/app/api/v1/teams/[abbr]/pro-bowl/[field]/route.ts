@@ -1,0 +1,32 @@
+import { NextRequest } from "next/server";
+import { apiAuthErrorResponse, authenticateApiKey, jsonApiError, jsonWithRateLimit } from "@/lib/api-key";
+import { buildTeamProBowlData, extractFieldValue } from "@/lib/api-slice-data";
+import { getTeamProfile } from "@/lib/public-data";
+import { getTeamProfileExtras } from "@/lib/team-profile-data";
+import { withApiErrorHandling } from "@/lib/api-route-error";
+
+async function handleGET(req: NextRequest, ctx: { params: Promise<{ abbr: string; field: string }> }) {
+  const auth = await authenticateApiKey(req);
+  if (!auth.ok) {
+    return apiAuthErrorResponse(auth);
+  }
+
+  const { abbr, field } = await ctx.params;
+  const seasonRaw = req.nextUrl.searchParams.get("season");
+  const season = seasonRaw ? Number.parseInt(seasonRaw, 10) : undefined;
+  const profile = await getTeamProfile(abbr, Number.isFinite(season as number) ? season : undefined);
+  if (!profile) {
+    return jsonApiError(auth, 404, "not_found", "team not found");
+  }
+
+  const extras = await getTeamProfileExtras(profile.team.id, profile.seasonYear);
+  const data = buildTeamProBowlData(profile, extras);
+  const extracted = extractFieldValue(data, field);
+  if (!extracted.ok) {
+    return jsonApiError(auth, 400, "invalid_field", "unsupported team pro bowl field");
+  }
+
+  return jsonWithRateLimit(auth, { data: { field, value: extracted.value } });
+}
+
+export const GET = withApiErrorHandling(handleGET);

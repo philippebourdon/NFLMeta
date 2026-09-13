@@ -1,0 +1,120 @@
+.card {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(87, 128, 171, 0.42);
+  background:
+    radial-gradient(circle at 88% 0%, rgba(255, 196, 123, 0.16), rgba(0, 0, 0, 0) 28%),
+    linear-gradient(180deg, rgba(16, 38, 62, 0.92), rgba(8, 20, 37, 0.98));
+  box-shadow: 0 18px 34px rgba(2, 8, 19, 0.22);
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  inset: auto -8% -42% auto;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(84, 162, 241, 0.22), rgba(0, 0, 0, 0) 68%);
+  pointer-events: none;
+}
+
+.compact {
+  gap: 10px;
+  padding: 14px;
+  border-radius: 18px;
+}
+
+.topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(155, 196, 236, 0.42);
+  background: rgba(18, 44, 72, 0.8);
+  color: #dcedff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.shield {
+  width: 34px;
+  height: 42px;
+  object-fit: contain;
+  opacity: 0.9;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  width: min(220px, 100%);
+  height: auto;
+  opacity: 0.94;
+}
+
+.title {
+  margin: 0;
+  color: #f4f9ff;
+  font-size: clamp(1.1rem, 2.1vw, 1.6rem);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+.message {
+  margin: 0;
+  color: #c7def5;
+  font-size: 14px;
+  line-height: 1.7;
+  max-width: 58ch;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.primaryAction,
+.secondaryAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.primaryAction {
+  border: 1px solid #7cb3ec;
+  background: linear-gradient(180deg, #4ca2f2, #2c6eb4);
+  color: #f1f8ff;
+}
+
+.secondaryAction {
+  border: 1px solid rgba(145, 185, 226, 0.56);
+  background: rgba(19, 46, 75, 0.78);
+  color: #d8ecff;
+}

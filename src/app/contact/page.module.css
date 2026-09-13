@@ -1,0 +1,263 @@
+.page {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  gap: 18px;
+  padding: 24px 0 30px;
+}
+
+.page::before {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  inset: 0 auto 0 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  background:
+    radial-gradient(circle at 82% 8%, rgba(255, 194, 128, 0.58) 0%, rgba(113, 176, 255, 0.24) 28%, rgba(14, 30, 61, 0.82) 68%, rgba(7, 14, 32, 0.94) 100%),
+    linear-gradient(180deg, rgba(8, 18, 42, 0.96), rgba(5, 11, 26, 0.98));
+}
+
+.page::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0 auto 0 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  background:
+    linear-gradient(154deg, rgba(255, 183, 108, 0.18) 0 18%, rgba(0, 0, 0, 0) 18% 100%),
+    radial-gradient(circle at 18% 36%, rgba(105, 171, 255, 0.18), rgba(0, 0, 0, 0) 34%);
+}
+
+.hero {
+  display: grid;
+  gap: 14px;
+  padding: 28px;
+  border-radius: 22px;
+  border: 1px solid rgba(96, 135, 178, 0.52);
+  background:
+    radial-gradient(circle at 88% -10%, rgba(124, 188, 255, 0.3), transparent 32%),
+    linear-gradient(180deg, rgba(17, 39, 65, 0.9), rgba(10, 24, 42, 0.94));
+  box-shadow: 0 24px 46px rgba(3, 8, 22, 0.38);
+}
+
+.kicker,
+.sectionKicker {
+  display: inline-flex;
+  width: fit-content;
+  padding: 6px 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(175, 211, 248, 0.5);
+  background: rgba(24, 53, 84, 0.68);
+  color: #daecff;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4.1vw, 3rem);
+  letter-spacing: -0.03em;
+}
+
+.heroLead {
+  margin: 0;
+  max-width: 72ch;
+  color: #c8dff6;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.heroLead a,
+.sidebarCard a {
+  color: #a6d2ff;
+}
+
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.metaPill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(143, 181, 220, 0.4);
+  background: rgba(16, 36, 58, 0.74);
+  color: #d3e8fc;
+  font-size: 12px;
+}
+
+.snapshotGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.snapshotCard,
+.formCard,
+.sidebarCard {
+  border-radius: 16px;
+  border: 1px solid rgba(80, 118, 159, 0.54);
+  background: linear-gradient(180deg, rgba(15, 36, 60, 0.93), rgba(9, 22, 39, 0.96));
+  box-shadow: 0 16px 30px rgba(2, 8, 20, 0.3);
+}
+
+.snapshotCard {
+  padding: 16px;
+}
+
+.snapshotLabel {
+  margin: 0;
+  color: #9fc2e5;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.snapshotValue {
+  margin: 8px 0 0;
+  color: #edf6ff;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.snapshotText {
+  margin: 8px 0 0;
+  color: #c2d9f1;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.78fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.formCard {
+  padding: 20px;
+}
+
+.sectionHeader {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.sectionHeader h2,
+.sidebarCard h3 {
+  margin: 0;
+}
+
+.sectionHeader p,
+.sidebarCard p,
+.linkList {
+  color: #c5dcef;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.field {
+  display: grid;
+  gap: 0.45rem;
+  color: #d9e6f5;
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.field input,
+.field select,
+.field textarea {
+  min-height: 46px;
+  padding: 0.82rem 0.9rem;
+  border-radius: 14px;
+  border: 1px solid rgba(126, 171, 214, 0.22);
+  background: rgba(8, 18, 33, 0.88);
+  color: #f5f9ff;
+  font: inherit;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: #88a2bd;
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 180px;
+}
+
+.messageField {
+  grid-column: 1 / -1;
+}
+
+.submitButton {
+  width: fit-content;
+  min-height: 46px;
+  border-radius: 999px;
+  padding: 0.9rem 1.25rem;
+  border: 0;
+  background: linear-gradient(135deg, #9fd6ff, #79b9ff);
+  color: #04111f;
+  font-weight: 800;
+  box-shadow: 0 12px 22px rgba(56, 140, 218, 0.26);
+}
+
+.sidebar {
+  display: grid;
+  gap: 12px;
+}
+
+.sidebarCard {
+  padding: 18px;
+}
+
+.linkList {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 8px;
+  line-height: 1.65;
+}
+
+@media (max-width: 1100px) {
+  .snapshotGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .hero {
+    padding: 20px;
+  }
+
+  .formCard,
+  .sidebarCard {
+    padding: 16px;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,12 @@
+.offer { max-width: 760px; margin: 32px auto; padding: 32px; border: 1px solid #355070; border-radius: 18px; background: #0c1729; color: #e2ebf7; line-height: 1.65; }
+.offer h1 { font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.12; }
+.offer a { color: #8ccbff; }
+.eyebrow { color: #8ccbff; font-size: .8rem; letter-spacing: .1em; }
+.price { font-size: 3rem; font-weight: bold; }
+.price del { color: #ff7474; font-size: 1.8rem; }
+.price span { font-size: 1rem; font-weight: normal; }
+.offer .button { display: block; width: fit-content; margin: 20px 0; padding: 14px 20px; border: 0; border-radius: 6px; background: #8ccbff; color: #081a30; font-weight: bold; cursor: pointer; text-decoration: none; }
+.offer input { margin-right: 8px; }
+.offer .cancelButton { display: inline-block; min-height: 44px; padding: 10px 16px; border: 1px solid #8ccbff; border-radius: 6px; background: #14253d; color: #8ccbff; font: inherit; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.offer .cancelButton:hover { background: #233c5c; color: #ffffff; }
+.offer .cancelButton:focus-visible { outline: 3px solid #8ccbff; outline-offset: 4px; }

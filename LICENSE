@@ -1,0 +1,95 @@
+NFLMeta Source-Available Licence
+Copyright (c) 2026 Philippe Bourdon / ClearOak Studio. All rights reserved.
+
+This repository is published so the application can be read, evaluated and
+learned from. It is source-available, not open source: no licence to reuse it
+is granted beyond the permissions set out below.
+
+
+1. WHAT THIS COVERS
+
+This licence covers the source code, configuration and documentation in this
+repository ("the Software").
+
+It does not cover the NFLMeta database or any data served by nflmeta.org. Those
+are addressed in section 4.
+
+It also does not cover the client libraries under sdk/. Those are released under
+the MIT licence, set out in sdk/LICENSE, which takes precedence for everything in
+that directory. A client library exists to be installed and used inside someone
+else's project, so withholding that permission would defeat its purpose.
+Permissive licensing costs nothing here: the SDK is a thin wrapper over the
+public API, and access to the data remains governed entirely by section 4 and the
+API terms.
+
+
+2. WHAT YOU MAY DO
+
+You may:
+
+  (a) view, download and read the Software;
+  (b) run it locally for the purpose of evaluating or studying it;
+  (c) quote short excerpts with attribution, for commentary, review, teaching
+      or technical discussion.
+
+
+3. WHAT YOU MAY NOT DO
+
+Without prior written permission you may not:
+
+  (a) use the Software, in whole or in substantial part, in any product or
+      service, whether commercial or not;
+  (b) redistribute, sublicense, sell or host the Software or a modified
+      version of it;
+  (c) create a derivative work intended to provide a service similar to
+      nflmeta.org;
+  (d) remove or alter this notice.
+
+Section 3 does not apply to the contents of sdk/, which are MIT licensed as
+stated in section 1.
+
+
+4. THE DATA IS NOT LICENSED HERE
+
+The NFLMeta database is a compiled work. The individual facts within it are not
+owned by anyone, but the selection, verification, correction, reconciliation
+and arrangement of those facts represents substantial independent effort and is
+claimed as a protected compilation to the extent the law allows.
+
+Nothing in this licence grants any right to that database. Access to the data
+is governed solely by the API terms at https://nflmeta.org/terms and the plan
+purchased.
+
+In particular, publishing this repository does not permit:
+
+  (a) bulk or systematic extraction of the data through the API or any other
+      means, whether or not it stays within plan limits;
+  (b) redistribution or resale of the data, in whole or in substantial part,
+      in any form;
+  (c) using the data to build, train or populate a competing dataset,
+      database or service.
+
+
+5. NO WARRANTY
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+6. NOT AFFILIATED WITH THE NFL
+
+NFLMeta is an independent reference project. It is not affiliated with,
+endorsed by, or sponsored by the National Football League, any of its member
+clubs, or any other organisation whose name appears in the data. All team
+names, marks and logos remain the property of their respective owners.
+
+
+7. ASKING
+
+Permission for anything section 3 or 4 withholds is available on request:
+info@sportsdbx.com

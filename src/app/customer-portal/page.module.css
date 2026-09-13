@@ -1,0 +1,568 @@
+.portalPage {
+  display: grid;
+  gap: 14px;
+  padding: 24px 0 34px;
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  border: 1px solid rgba(90, 139, 191, 0.5);
+  background:
+    radial-gradient(circle at 82% 16%, rgba(80, 168, 255, 0.18), transparent 28%),
+    radial-gradient(circle at 18% 18%, rgba(117, 188, 255, 0.18), transparent 26%),
+    linear-gradient(180deg, rgba(16, 39, 63, 0.97), rgba(8, 22, 38, 0.99));
+  box-shadow: 0 26px 70px rgba(2, 8, 20, 0.42);
+  padding: 24px;
+  display: grid;
+  gap: 16px;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.heroMeta {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.heroMetaCard {
+  border-radius: 16px;
+  border: 1px solid rgba(110, 156, 205, 0.24);
+  background: rgba(8, 24, 41, 0.42);
+  padding: 14px;
+}
+
+.heroMetaCard span {
+  display: block;
+  color: #8fb8e1;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.heroMetaCard strong {
+  display: block;
+  margin-top: 7px;
+  color: #f2f8ff;
+  font-size: 1rem;
+}
+
+.heroTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 16px;
+}
+
+.heroCopy h1 {
+  margin: 0;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+}
+
+.heroCopy p {
+  margin: 10px 0 0;
+  color: #b9d4ef;
+  max-width: 60ch;
+}
+
+.planBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 110px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(147, 196, 246, 0.32);
+  background: rgba(12, 33, 54, 0.74);
+  color: #ecf6ff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.statCard {
+  border-radius: 18px;
+  border: 1px solid rgba(109, 162, 218, 0.24);
+  background: rgba(10, 28, 46, 0.74);
+  padding: 14px;
+}
+
+.statLabel {
+  display: block;
+  color: #8fb8e1;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.statValue {
+  display: block;
+  margin-top: 8px;
+  color: #f3f8ff;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.contentGrid,
+.pairedGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  align-items: stretch;
+}
+
+.contentGrid > *,
+.pairedGrid > * {
+  min-width: 0;
+}
+
+.keyCard,
+.sideCard {
+  border-radius: 22px;
+  border: 1px solid rgba(84, 129, 177, 0.44);
+  background: linear-gradient(180deg, rgba(16, 39, 63, 0.93), rgba(8, 22, 38, 0.97));
+  box-shadow: 0 20px 48px rgba(2, 8, 20, 0.3);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sectionLabel {
+  display: inline-flex;
+  margin-bottom: 8px;
+  color: #94bce5;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.keyTitle {
+  margin: 0 0 8px;
+  font-size: 1.4rem;
+}
+
+.keyCard p,
+.sideCard p,
+.sideCard li {
+  color: #bed6ef;
+}
+
+.keyBox {
+  margin: 14px 0 12px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(113, 165, 219, 0.34);
+  background: rgba(6, 20, 35, 0.86);
+  overflow-x: auto;
+}
+
+.keyBox code {
+  color: #f2f8ff;
+  font-size: 0.95rem;
+}
+
+.actionRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.rotateForm {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(144, 184, 226, 0.24);
+}
+
+.rotateForm label {
+  color: #f2f8ff;
+  font-weight: 700;
+}
+
+.rotateForm label span {
+  color: #bed6ef;
+  font-weight: 400;
+}
+
+.rotateControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.rotateControls input {
+  min-height: 40px;
+  flex: 1 1 150px;
+  border: 1px solid rgba(144, 184, 226, 0.58);
+  border-radius: 10px;
+  background: rgba(6, 20, 35, 0.86);
+  color: #f2f8ff;
+  padding: 0 12px;
+}
+
+.copyButton,
+.primaryAction,
+.secondaryAction,
+.planButton,
+.planButtonSecondary,
+.dangerAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.copyButton {
+  border: 1px solid rgba(144, 184, 226, 0.58);
+  background: rgba(8, 28, 46, 0.9);
+  color: #d8ebff;
+}
+
+.primaryAction {
+  border: 1px solid #7cb3ec;
+  background: linear-gradient(180deg, #4ca2f2, #2c6eb4);
+  color: #eff7ff;
+}
+
+.secondaryAction {
+  border: 1px solid rgba(144, 184, 226, 0.58);
+  background: rgba(17, 43, 70, 0.86);
+  color: #d8ebff;
+}
+
+.planButtonSecondary {
+  border: 1px solid rgba(144, 184, 226, 0.58);
+  background: rgba(11, 33, 55, 0.92);
+  color: #d8ebff;
+}
+
+.planList {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.planActions {
+  display: grid;
+  gap: 8px;
+  justify-items: stretch;
+}
+
+.planBilling {
+  margin: 4px 0 0;
+  color: #9ec4ea;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.planOption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(109, 162, 218, 0.24);
+  background: rgba(8, 25, 42, 0.88);
+}
+
+.planOptionActive {
+  border-color: rgba(108, 182, 255, 0.56);
+  box-shadow: inset 0 0 0 1px rgba(108, 182, 255, 0.16);
+}
+
+.planOptionTop {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.planOptionTop h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.planOptionTop span {
+  color: #8fc0ef;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.planOption p {
+  margin: 6px 0 0;
+  color: #bed6ef;
+}
+
+.planOverage {
+  color: #9fc1e4 !important;
+  font-size: 0.92rem;
+}
+
+.planCurrent {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 112px;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(124, 179, 236, 0.34);
+  background: rgba(16, 41, 68, 0.92);
+  color: #eef6ff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.planButton {
+  border: 1px solid rgba(124, 179, 236, 0.5);
+  background: linear-gradient(180deg, rgba(28, 72, 116, 0.96), rgba(15, 45, 76, 0.96));
+  color: #eff7ff;
+}
+
+.inlineForm {
+  margin-top: 16px;
+}
+
+.snippetList,
+.activityList {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.snippetCard,
+.activityItem {
+  border-radius: 18px;
+  border: 1px solid rgba(109, 162, 218, 0.24);
+  background: rgba(8, 25, 42, 0.88);
+  padding: 14px;
+  min-width: 0;
+}
+
+.portalSnippet {
+  min-width: 0;
+}
+
+.portalSnippet :global(pre) {
+  max-width: 100%;
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.portalSnippet :global(code) {
+  white-space: inherit;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.snippetHeader h3,
+.activityTop strong {
+  margin: 0;
+  color: #f2f8ff;
+  font-size: 1rem;
+}
+
+.snippetHeader p,
+.activityItem p,
+.activityItem small {
+  margin: 6px 0 0;
+  color: #bed6ef;
+}
+
+.activityMetaRow {
+  margin-top: 8px;
+}
+
+.activityTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.activityProvider {
+  color: #8fb8e1;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.activityStatus {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(124, 179, 236, 0.28);
+  background: rgba(17, 43, 70, 0.84);
+  color: #dff0ff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.healthList {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.healthRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+  padding: 12px 13px;
+  border-radius: 14px;
+  border: 1px solid rgba(109, 162, 218, 0.24);
+  background: rgba(8, 25, 42, 0.88);
+}
+
+.healthRow span {
+  color: #9fc1e4;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.healthRow strong {
+  color: #f2f8ff;
+  font-size: 0.98rem;
+}
+
+.dangerCard {
+  border-color: rgba(192, 94, 94, 0.36);
+}
+
+.deleteForm {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.textInput {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(173, 122, 122, 0.38);
+  background: rgba(20, 9, 12, 0.56);
+  color: #f7fbff;
+}
+
+.textInput::placeholder {
+  color: #bda4a4;
+}
+
+.dangerAction {
+  border: 1px solid rgba(220, 98, 98, 0.52);
+  background: linear-gradient(180deg, #a13232, #7a1d1d);
+  color: #fff5f5;
+}
+
+.sideCard ul {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 8px;
+}
+
+.usageTrack {
+  height: 12px;
+  margin: 14px 0 10px;
+  border-radius: 999px;
+  background: rgba(7, 22, 37, 0.92);
+  border: 1px solid rgba(109, 162, 218, 0.24);
+  overflow: hidden;
+}
+
+.usageBlock {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(109, 162, 218, 0.2);
+}
+
+.usageNotice {
+  margin: 14px 0 0;
+  padding: 11px 13px;
+  border: 1px solid rgba(244, 184, 83, 0.46);
+  border-radius: 10px;
+  background: rgba(74, 47, 8, 0.38);
+  color: #ffe1a1;
+  line-height: 1.5;
+}
+
+.usageNotice[data-level="critical"] {
+  border-color: rgba(255, 116, 116, 0.54);
+  background: rgba(92, 20, 25, 0.4);
+  color: #ffd0d0;
+}
+
+.usageBlock p {
+  margin: 0;
+}
+
+.usageBar {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #4ca2f2, #89c6ff);
+}
+
+.usageMeta {
+  margin: 8px 0 0;
+  color: #9fc1e4;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 1000px) {
+  .statsGrid,
+  .contentGrid,
+  .pairedGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .heroTop {
+    flex-direction: column;
+  }
+
+  .heroMeta {
+    grid-template-columns: 1fr;
+  }
+
+  .planOption {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

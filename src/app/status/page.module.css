@@ -1,0 +1,269 @@
+.page {
+  display: grid;
+  gap: 14px;
+  padding: 24px 0 30px;
+}
+
+.hero,
+.card,
+.history,
+.historyCard,
+.heroStat {
+  border-radius: 16px;
+  border: 1px solid rgba(80, 118, 159, 0.58);
+  background: linear-gradient(180deg, rgba(16, 38, 63, 0.92), rgba(10, 26, 46, 0.94));
+  box-shadow: 0 16px 30px rgba(2, 8, 20, 0.34);
+}
+
+.hero {
+  padding: 20px;
+}
+
+.kicker,
+.sectionEyebrow {
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(165, 205, 247, 0.56);
+  background: rgba(24, 54, 86, 0.62);
+  color: #d8ebff;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.heroTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 16px;
+}
+
+.hero h1,
+.history h2 {
+  margin: 0;
+}
+
+.hero p,
+.sectionNote {
+  margin: 8px 0 0;
+  color: #bfd8f2;
+}
+
+.heroStatus {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 140px;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.heroStats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.heroStat {
+  padding: 14px;
+}
+
+.heroStat strong {
+  display: block;
+  color: #edf6ff;
+  font-size: 24px;
+}
+
+.heroStat span {
+  display: block;
+  margin-top: 6px;
+  color: #c4dcf6;
+  font-size: 13px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.card {
+  padding: 14px;
+}
+
+.card h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.badge {
+  display: inline-flex;
+  margin-top: 8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: 1px solid transparent;
+}
+
+.badgeOperational,
+.impactNone {
+  background: rgba(12, 85, 54, 0.45);
+  color: #cff6e0;
+  border-color: rgba(90, 199, 145, 0.62);
+}
+
+.badgeDegraded,
+.impactMinor {
+  background: rgba(131, 82, 18, 0.45);
+  color: #ffe8c7;
+  border-color: rgba(234, 170, 71, 0.62);
+}
+
+.badgeMaintenance,
+.impactMajor {
+  background: rgba(19, 74, 133, 0.48);
+  color: #d8e8ff;
+  border-color: rgba(110, 170, 238, 0.62);
+}
+
+.badgeDown {
+  background: rgba(122, 26, 32, 0.5);
+  color: #ffd9dc;
+  border-color: rgba(232, 105, 116, 0.66);
+}
+
+/*
+ * Deliberately grey rather than green. An unmeasured component has to look
+ * different from a healthy one at a glance, or the page is back to publishing
+ * confidence it has not earned.
+ */
+.badgeUnknown {
+  background: rgba(66, 74, 88, 0.5);
+  color: #d9e0ea;
+  border-color: rgba(140, 154, 176, 0.6);
+}
+
+.uptime {
+  margin: 10px 0 0;
+  color: #c4dcf6;
+  font-size: 14px;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+}
+
+.history {
+  padding: 14px;
+}
+
+.sectionTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 12px;
+}
+
+.sectionNote {
+  max-width: 32ch;
+  font-size: 13px;
+  text-align: right;
+}
+
+.historyList {
+  margin-top: 10px;
+  display: grid;
+  gap: 10px;
+}
+
+.historyCard {
+  padding: 12px;
+}
+
+.historyHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.date {
+  margin: 0;
+  color: #9dc0e4;
+  font-size: 12px;
+}
+
+.impactBadge {
+  display: inline-flex;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.historyCard h3 {
+  margin: 6px 0 0;
+  font-size: 15px;
+}
+
+.historyCard p {
+  margin: 6px 0 0;
+  color: #c4dcf6;
+}
+
+.meta {
+  font-size: 12px;
+  color: #9dc0e4 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.detailList {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+  color: #c4dcf6;
+}
+
+@media (max-width: 1100px) {
+  .grid,
+  .heroStats,
+  .columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 800px) {
+  .heroTop,
+  .sectionTop {
+    flex-direction: column;
+  }
+
+  .sectionNote {
+    max-width: none;
+    text-align: left;
+  }
+
+  .grid,
+  .heroStats,
+  .columns {
+    grid-template-columns: 1fr;
+  }
+}
