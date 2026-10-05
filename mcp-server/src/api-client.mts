@@ -141,7 +141,7 @@ export class NFLMetaApiClient {
     appendQuery(url, query);
 
     const key = cacheKey(path, query);
-    if (this.cacheEnabled) {
+    if (this.cacheEnabled && cacheTtlMsForRequest(url.pathname, query, undefined, new Date(this.now())) > 0) {
       const hit = this.cache.get(key, this.now());
       if (hit) return resultWithCacheHit(hit);
     }
@@ -192,7 +192,7 @@ export class NFLMetaApiClient {
       };
       if (this.cacheEnabled) {
         const now = this.now();
-        const ttlMs = cacheTtlMsForRequest(path, query, result.data, new Date(now));
+        const ttlMs = cacheTtlMsForRequest(url.pathname, query, result.data, new Date(now));
         this.cache.set(key, structuredClone(result), ttlMs, now);
       }
       return result;

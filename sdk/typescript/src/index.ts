@@ -6,8 +6,11 @@ import {
   ContributorsResource,
   ExecutivesResource,
   GamesResource,
+  DepthChartsResource,
+  RostersResource,
   HallOfFameResource,
   HealthResource,
+  InjuriesResource,
   HistoryResource,
   LiveScoresResource,
   MetadataResource,
@@ -31,6 +34,7 @@ export * from "./types.js";
 
 export class NFLMetaClient extends NFLMetaClientCore {
   readonly health: HealthResource;
+  readonly injuries: InjuriesResource;
   readonly liveScores: LiveScoresResource;
   readonly usage: UsageResource;
   readonly metadata: MetadataResource;
@@ -38,6 +42,8 @@ export class NFLMetaClient extends NFLMetaClientCore {
   readonly teams: TeamsResource;
   readonly players: PlayersResource;
   readonly games: GamesResource;
+  readonly rosters: RostersResource;
+  readonly depthCharts: DepthChartsResource;
   readonly plays: PlaysResource;
   readonly playoffGames: PlayoffGamesResource;
   readonly standings: StandingsResource;
@@ -57,6 +63,7 @@ export class NFLMetaClient extends NFLMetaClientCore {
   constructor(options: ConstructorParameters<typeof NFLMetaClientCore>[0] = {}) {
     super(options);
     this.health = new HealthResource(this);
+    this.injuries = new InjuriesResource(this);
     this.liveScores = new LiveScoresResource(this);
     this.usage = new UsageResource(this);
     this.metadata = new MetadataResource(this);
@@ -64,6 +71,8 @@ export class NFLMetaClient extends NFLMetaClientCore {
     this.teams = new TeamsResource(this);
     this.players = new PlayersResource(this);
     this.games = new GamesResource(this);
+    this.rosters = new RostersResource(this);
+    this.depthCharts = new DepthChartsResource(this);
     this.plays = new PlaysResource(this);
     this.playoffGames = new PlayoffGamesResource(this);
     this.standings = new StandingsResource(this);

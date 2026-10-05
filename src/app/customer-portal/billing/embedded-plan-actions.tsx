@@ -52,6 +52,10 @@ export default function EmbeddedPlanActions({
       if (!response.ok) {
         throw new Error(payload?.error?.message || "Unable to start embedded billing.");
       }
+      if (payload.checkoutUrl) {
+        window.location.assign(payload.checkoutUrl);
+        return;
+      }
       setIntent({
         clientSecret: payload.clientSecret,
         publishableKey: payload.publishableKey,

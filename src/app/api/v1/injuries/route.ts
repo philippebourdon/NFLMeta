@@ -4,6 +4,7 @@ import { getDataSliceStatus } from "@/lib/data-status";
 import { getLatestInjuryWeek, listInjuryReports } from "@/lib/injury-data";
 import { withApiErrorHandling } from "@/lib/api-route-error";
 import { getCurrentReserves } from '@/lib/current-reserves';
+import { parseInjuryPracticeDate } from '@/lib/injury-practice-date';
 
 /** Rejects a non-numeric season rather than letting NaN reach the query. */
 function parseSeason(raw: string | null): number | null | "invalid" {
@@ -27,16 +28,18 @@ async function handleGET(req: NextRequest) {
   if (seasonParsed === "invalid") return jsonApiError(auth, 400, "invalid_request", "season must be a valid year");
   const seasonRaw = seasonParsed === null ? null : String(seasonParsed);
   const weekRaw = params.get("week");
+  const practiceDate = parseInjuryPracticeDate(params.get("date"));
+  if (practiceDate === 'invalid') return jsonApiError(auth, 400, "invalid_request", "date must be a valid YYYY-MM-DD date");
 
   // With no season given, default to the newest week on file rather than
   // paging through every season ever reported.
-  const latest = seasonRaw ? null : await getLatestInjuryWeek();
-  const seasonYear = seasonRaw ? Number.parseInt(seasonRaw, 10) : latest?.seasonYear ?? null;
+  const latest = await getLatestInjuryWeek();
+  const seasonYear = seasonRaw ? Number.parseInt(seasonRaw, 10) : practiceDate ? null : latest?.seasonYear ?? null;
   const week = weekRaw
     ? Number.parseInt(weekRaw, 10)
     : seasonRaw
       ? null
-      : latest?.week ?? null;
+      : practiceDate ? null : latest?.week ?? null;
 
   const team = params.get("team");
   const limit = parseIntQuery(params.get("limit"), 100, 1, 500);
@@ -45,6 +48,7 @@ async function handleGET(req: NextRequest) {
   const result = await listInjuryReports({
     seasonYear,
     week,
+    practiceDate,
     team,
     status: params.get("status"),
     limit,
@@ -63,6 +67,7 @@ async function handleGET(req: NextRequest) {
       current_reserves: await getCurrentReserves(team),
       season_year: seasonYear,
       week,
+      date: practiceDate,
       team: team || null,
       total: result.total,
       limit,
@@ -71,7 +76,7 @@ async function handleGET(req: NextRequest) {
       has_more: offset + result.rows.length < result.total,
       data_status: dataStatus,
     },
-  });
+  }, undefined, { excludeCurrentReserves: true });
 }
 
 export const GET = withApiErrorHandling(handleGET);

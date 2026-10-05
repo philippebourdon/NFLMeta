@@ -17,6 +17,34 @@ function response(body, init = {}) {
   });
 }
 
+test("current-season helpers preserve paths, metadata and optional counts", async () => {
+  const urls = [];
+  const meta = { total: null, current_reserves: [{ confirmation: 'reported_pending' }] };
+  const client = new NFLMetaClient({ apiKey: 'test', fetch: async input => {
+    urls.push(new URL(String(input))); return response({ data: [], meta });
+  }});
+  await client.teams.capSpace({ season: 2026, team_abbr: 'NE' });
+  await client.games.inactives(22773);
+  assert.deepEqual((await client.injuries.list({ week: 1 })).meta, meta);
+  await client.teams.injuries('NE');
+  await client.players.injuries('a/b');
+  const roster = await client.teams.roster('NE', { count: true });
+  assert.equal(roster.meta.total, null);
+  assert.deepEqual(urls.map(u => u.pathname), ['/api/v1/teams/cap-space', '/api/v1/games/22773/inactives', '/api/v1/injuries', '/api/v1/teams/NE/injuries', '/api/v1/players/a%2Fb/injuries', '/api/v1/teams/NE/roster']);
+  assert.equal(urls[0].searchParams.get('team_abbr'), 'NE');
+  assert.equal(urls[5].searchParams.get('count'), 'true');
+});
+
+test('roster helpers forward historical week, season type and pagination',async()=>{
+  const urls=[];
+  const client=new NFLMetaClient({apiKey:'test',fetch:async input=>{urls.push(new URL(String(input)));return response({data:[],meta:{pre_kickoff_verified:false}});}});
+  await client.teams.roster('NE',{season:2020,week:2,season_type:'REG',offset:100});
+  await client.players.roster('a/b',{season:2020,week:18,season_type:'POST',count:true});
+  assert.equal(urls[0].searchParams.get('week'),'2');assert.equal(urls[0].searchParams.get('offset'),'100');
+  assert.equal(urls[1].pathname,'/api/v1/players/a%2Fb/roster');
+  assert.equal(urls[1].searchParams.get('season_type'),'POST');assert.equal(urls[1].searchParams.get('count'),'true');
+});
+
 test("adds api key header and parses rate limit headers", async () => {
   let requestUrl;
   let requestHeaders;
@@ -318,4 +346,26 @@ test("refuses to follow a redirect off the API origin, and follows one that stay
     "https://nflmeta.org/api/v1/players/",
     "https://nflmeta.org/api/v1/players",
   ]);
+});
+
+test('live-score resource forwards selective polling filters', async () => {
+  let captured;
+  const client = new NFLMetaClient({apiKey:'test-key',fetch:async (url) => {
+    captured=String(url);return response({data:[],meta:{}});
+  }});
+  await client.liveScores.get({phase:'in',game_ids:'12345,12346'});
+  const url=new URL(captured);
+  assert.equal(url.pathname,'/api/v1/live-scores');
+  assert.equal(url.searchParams.get('phase'),'in');
+  assert.equal(url.searchParams.get('game_ids'),'12345,12346');
+});
+
+test('integration helpers preserve null facts, quality and date filters', async () => {
+  const urls=[]; const body={data:[{kick_distance:null,events:[{team_abbr:null}]}],meta:{quality:{completeness:'not_certified'},coverage_details:{exhaustive:false}}};
+  const c=new NFLMetaClient({apiKey:'test',fetch:async input=>{urls.push(new URL(String(input)));return response(body);}});
+  assert.deepEqual((await c.games.defenseSpecialTeams(123,{offset:100})).data,body.data);
+  assert.deepEqual((await c.teams.depthChart('NE')).meta,body.meta);
+  await c.depthCharts.list({season:2026});await c.depthCharts.changes({team:'NE'});await c.rosters.list({season:2020,week:2});await c.players.injuries('a/b',{date:'2020-09-16'});
+  assert.deepEqual(urls.map(x=>x.pathname),['/api/v1/games/123/defense-special-teams','/api/v1/teams/NE/depth-chart','/api/v1/depth-charts','/api/v1/depth-charts/changes','/api/v1/rosters','/api/v1/players/a%2Fb/injuries']);
+  assert.equal(urls[0].searchParams.get('offset'),'100');assert.equal(urls[5].searchParams.get('date'),'2020-09-16');
 });

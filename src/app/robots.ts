@@ -55,6 +55,8 @@ export default function robots(): MetadataRoute.Robots {
           "/sign-up",
           "/auth/",
           "/design/",
+          "/gridironarr",
+          "/gridironarr/",
           "/forbidden",
           "/maintenance",
           "/quota-exceeded",

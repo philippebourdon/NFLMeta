@@ -1,3 +1,4 @@
+import { depthChartQuality } from "@/lib/depth-chart-quality";
 import { NextRequest } from "next/server";
 import { apiAuthErrorResponse, authenticateApiKey, jsonApiError, jsonWithRateLimit } from "@/lib/api-key";
 import { getDataSliceStatus } from "@/lib/data-status";
@@ -62,6 +63,7 @@ async function handleGET(req: NextRequest) {
       returned: result.rows.length,
       has_more: offset + result.rows.length < result.total,
       data_status: dataStatus,
+      quality: depthChartQuality(result.rows),
     },
   });
 }

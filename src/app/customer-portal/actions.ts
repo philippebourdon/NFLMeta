@@ -1,13 +1,16 @@
 "use server";
 
+import Stripe from "stripe";
 import { redirect } from "next/navigation";
-import { safeAuth } from "@/lib/clerk-safe";
+import { retentionDevPreview } from "@/lib/subscription-retention-preview";
+import { safeCurrentUser, safeAuth } from "@/lib/clerk-safe";
 import { deleteCustomerAccount, getCustomerPortalDataByClerkUserId, rotateCustomerApiKey } from "@/lib/customer-auth";
 import { normalizeBillingPlan } from "@/lib/customer-plans";
 import {
   cancelStripeBillingForAccountClosure,
   changeStripeSubscriptionPlan,
   createStripeCheckoutUrlForPlan,
+  createRowPackCheckoutUrl,
 } from "@/lib/stripe-billing";
 
 async function requireClerkUserId(): Promise<string> {
@@ -27,12 +30,30 @@ export async function startCheckoutAction(formData: FormData): Promise<void> {
   redirect(url);
 }
 
+export async function purchaseRowPacksAction(formData: FormData): Promise<void> {
+  const userId = await requireClerkUserId();
+  const packs = Number(formData.get("packs"));
+  const url = await createRowPackCheckoutUrl(userId, packs);
+  redirect(url);
+}
+
 export async function switchPlanAction(formData: FormData): Promise<void> {
+  if (process.env.NODE_ENV === "development" && process.env.NFLMETA_RETENTION_PREVIEW_EMAIL) {
+    const { value: previewUser } = await safeCurrentUser();
+    if (retentionDevPreview(previewUser)) redirect("/customer-portal/billing?retention_preview=canceled");
+  }
   const userId = await requireClerkUserId();
   const plan = normalizeBillingPlan(String(formData.get("plan") || "free"));
   const interval = String(formData.get("interval") || "month");
   const prorationDate = String(formData.get("prorationDate") || "").trim();
-  await changeStripeSubscriptionPlan(userId, plan, interval, prorationDate || null);
+  try {
+    await changeStripeSubscriptionPlan(userId, plan, interval, prorationDate || null);
+  } catch (error) {
+    if (error instanceof Stripe.errors.StripeCardError) {
+      redirect("/customer-portal/billing?billing_error=payment-failed");
+    }
+    throw error;
+  }
   redirect(`/customer-portal/billing?billing=${plan === "free" ? "downgraded" : "updated"}`);
 }
 

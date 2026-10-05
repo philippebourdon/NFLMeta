@@ -1,3 +1,4 @@
+import { resumeSupportPreviewRequest } from "@/lib/support-preview-routing";
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -7,6 +8,14 @@ const BOT_USER_AGENT_RE =
   /\b(amazonbot|applebot|ahrefsbot|bingbot|bytespider|ccbot|chatgpt-user|claudebot|crawler|dotbot|duckduckbot|facebookexternalhit|facebot|gptbot|googlebot|googleother|mj12bot|meta-externalagent|oai-searchbot|perplexitybot|petalbot|semrushbot|seznambot|sogou|spider|yandexbot)\b/i;
 
 const handleClerkRoute = clerkMiddleware(async (auth, req) => {
+  if (process.env.NFLMETA_SUPPORT_PRIVATE_PREVIEW === "1") {
+    const { userId } = await auth();
+    if (!userId) {
+      const signIn = new URL("https://nflmeta.org/sign-in");
+      signIn.searchParams.set("redirect_url", `${req.nextUrl.basePath}${req.nextUrl.pathname}`);
+      return NextResponse.redirect(signIn);
+    }
+  }
   if (isProtectedRoute(req)) {
     await auth.protect();
   }
@@ -200,7 +209,18 @@ export default async function proxy(req: NextRequest, event: Parameters<typeof h
     return malformedPathResponse(req, pathname);
   }
 
-  return handleClerkRoute(req, event);
+  // This standalone flow verifies the supplied NFLMeta API key itself. Do not
+  // send a visitor's Clerk cookies through an unrelated session handshake.
+  if (pathname === '/plex/setup' || pathname === '/plex/setup/action' || pathname === '/api/internal/support-email') return NextResponse.next();
+  const response = await handleClerkRoute(req, event);
+  // Next normalizes a loopback request URL to localhost, while its router keeps
+  // the explicit listener address. Clerk's same-URL resume rewrite can then
+  // proxy back to this listener. Retain Clerk's response/context and resume it
+  // internally; the helper leaves redirects and different destinations intact.
+  if (response) {
+    resumeSupportPreviewRequest(req.url, response.headers);
+  }
+  return response;
 }
 
 export const config = {

@@ -507,3 +507,117 @@
     align-items: stretch;
   }
 }
+
+.retentionDialog {
+  margin: auto;
+  max-width: min(760px, calc(100vw - 32px));
+  max-height: calc(100dvh - 48px);
+  overflow: auto;
+  border: 1px solid #5481b1;
+  border-radius: 22px;
+  background: #10273f;
+  color: #f2f8ff;
+  padding: 24px;
+}
+.retentionDialog::backdrop { background: rgba(2, 8, 20, 0.78); }
+.retentionChoices { display: grid; gap: 16px; }
+.retentionConsent { display: flex; align-items: flex-start; gap: 10px; margin: 14px 0; }
+.retentionConsent input { flex: none; margin-top: 4px; }
+
+.retentionDialogHeader { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.retentionDialogHeader h2 { margin: 0; }
+.retentionDialogHeader button { flex: none; min-height: 44px; }
+
+.retentionOptions { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 12px; }
+.retentionOption { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; text-align: left; padding: 20px; border: 1px solid #365573; border-radius: 14px; background: #10253a; color: #eef6ff; font: inherit; cursor: pointer; }
+.retentionOption:hover { border-color: #72b6e9; background: #142e47; }
+.retentionOption[aria-pressed="true"] { border-color: #5dc9df; background: #123448; box-shadow: inset 0 0 0 1px #5dc9df; }
+.retentionOption:focus-visible, .retentionPrimary:focus-visible, .retentionSecondary:focus-visible { outline: 2px solid #6ed3e5; outline-offset: 3px; }
+.retentionOptionTitle { color: #b4cce1; font-size: 0.9rem; font-weight: 600; }
+.retentionPrice { font-size: 2rem; line-height: 1.2; font-weight: 700; }
+.retentionPrice small { font-size: 0.85rem; font-weight: 400; color: #afc4d8; }
+.retentionOptionRenewal { color: #9fbbd1; font-size: 0.85rem; }
+.retentionFinePrint { margin: 0; color: #a5bed3; font-size: 0.8rem; line-height: 1.55; }
+.retentionConfirmation { display: grid; gap: 12px; padding: 14px 0 2px; border-top: 1px solid #29435a; }
+.retentionConfirmation .retentionConsent { margin: 0; font-size: 0.85rem; line-height: 1.55; }
+.retentionConsent input { accent-color: #48b9d5; width: 16px; height: 16px; }
+.retentionPrimary, .retentionSecondary { display: inline-flex; align-items: center; justify-content: center; justify-self: start; width: fit-content; min-height: 44px; padding: 10px 18px; border-radius: 9px; font: inherit; font-size: 0.88rem; font-weight: 600; text-decoration: none; cursor: pointer; }
+.retentionPrimary { border: 1px solid #60cee0; background: #5bc5d7; color: #061d2b; }
+.retentionPrimary:hover { background: #79d7e5; }
+.retentionSecondary { border: 1px solid #3b5972; background: transparent; color: #c5d9e9; }
+.retentionSecondary:hover { background: #162d42; border-color: #6b97b9; }
+.retentionReview { display: grid; gap: 20px; }
+.retentionHeading h3 { margin: 0 0 6px; font-size: 1.35rem; }
+.retentionHeading p { margin: 0; color: #b5cde1; font-size: 0.95rem; }
+.retentionExit { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding-top: 16px; border-top: 1px solid #29435a; }
+.retentionExit form { margin: 0; }
+.retentionPreview { max-width: 760px; margin: 0 auto; }
+.retentionPreviewHeader { display: grid; gap: 10px; padding: 12px 0 4px; }
+.retentionPreviewHeader h1 { margin: 0; font-size: 1.8rem; }
+.retentionPreviewHeader p { margin: 0; }
+.retentionPreviewBody { border: 1px solid #2d4961; border-radius: 18px; padding: 24px; background: rgba(9, 26, 42, 0.85); }
+@media (max-width: 540px) {
+  .retentionPreviewBody { padding: 18px; }
+  .retentionOption { padding: 16px; gap: 6px; }
+  .retentionPreviewHeader h1 { font-size: 1.5rem; }
+}
+@media (max-width: 540px) {
+  .retentionOptions { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .retentionOption { padding: 12px; font-size: 0.8rem; }
+  .retentionOptionTitle { min-height: 2.4em; font-size: 0.8rem; }
+  .retentionPrice { font-size: 1.75rem; }
+  .retentionOptionRenewal { font-size: 0.75rem; }
+  .retentionExit { gap: 8px; }
+  .retentionExit .retentionSecondary { padding: 10px 12px; font-size: 0.8rem; }
+}
+
+.retentionBrandHeader { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.retentionBrandHeader .retentionHeading { min-width: 0; flex: 1; }
+.retentionHeading .retentionGraphicTitle { margin: -8px 0 8px; width: min(100%, 350px); line-height: 0; }
+.retentionGraphicTitle img { display: block; width: 100%; height: auto; }
+.retentionOfferBadge { width: 162.5px; height: auto; flex: none; }
+.retentionPromptBrand { display: flex; align-items: center; gap: 12px; }
+.retentionPromptBrand .retentionOfferBadge { width: 112.5px; }
+.retentionOption:hover { border-color: #c9a64d; }
+.retentionOption[aria-pressed="true"] { border-color: #e8c45c; background: #21323b; box-shadow: inset 0 0 0 1px #e8c45c; }
+.retentionOption:focus-visible, .retentionPrimary:focus-visible { outline-color: #efd077; }
+.retentionPrimary { border-color: #e7c251; background: #efd070; color: #192232; }
+.retentionPrimary:hover { background: #f7dc8b; }
+@media (max-width: 540px) {
+  .retentionBrandHeader { gap: 8px; }
+  .retentionHeading .retentionGraphicTitle { width: min(100%, 225px); margin-top: 0; }
+  .retentionOfferBadge { width: 112.5px; }
+  .retentionBrandHeader .retentionHeading p { font-size: 0.82rem; }
+}
+
+.retentionHeading .retentionTicket {
+  position: relative;
+  display: inline-block;
+  margin: 4px 0 0;
+  padding: 10px 18px;
+  border: 1px dashed rgba(78, 245, 231, 0.8);
+  border-radius: 8px;
+  background: rgba(13, 61, 66, 0.5);
+  color: #7ffff1;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  font-weight: 600;
+  text-shadow: 0 0 12px rgba(74, 245, 226, 0.45);
+  box-shadow: 0 0 15px rgba(40, 217, 201, 0.12), inset 0 0 12px rgba(40, 217, 201, 0.06);
+}
+.retentionTicket::before, .retentionTicket::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border: 1px solid rgba(78, 245, 231, 0.6);
+  border-radius: 50%;
+  background: #091a2a;
+  transform: translateY(-50%);
+}
+.retentionTicket::before { left: -6px; }
+.retentionTicket::after { right: -6px; }
+@media (max-width: 540px) {
+  .retentionHeading .retentionTicket { padding: 8px 12px; font-size: 0.78rem; }
+}

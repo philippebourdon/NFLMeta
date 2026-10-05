@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -9,7 +10,11 @@ import styles from "./page.module.css";
 import { scoreGameStatus } from '@/lib/score-game-status';
 import { possessionTeam } from '@/lib/score-possession';
 
-function pollDelay(snapshot: LiveScoreSnapshot): number {
+export type ScoreboardSnapshot = Omit<LiveScoreSnapshot, "games"> & {
+  games: Array<Omit<LiveScoreGame, "injuries">>;
+};
+
+function pollDelay(snapshot: ScoreboardSnapshot): number {
   const now = Date.now();
   if (snapshot.games.some((game) => game.phase === "in")) return 5_000;
   if (snapshot.games.some((game) => game.phase === "pre" && Date.parse(game.kickoffAt) - now <= 30 * 60_000)) {
@@ -52,7 +57,15 @@ function TeamRow({ team, possessionLabel }: {
     <div className={styles.teamRow}>
       <div className={styles.teamIdentity}>
         {team.logoUrl ? (
-          <UiImage src={team.logoUrl} alt="" width={48} height={48} className={styles.teamLogo} />
+          <Image
+            src={team.logoUrl}
+            alt=""
+            width={48}
+            height={48}
+            sizes="42px"
+            loading="eager"
+            className={styles.teamLogo}
+          />
         ) : (
           <span className={styles.logoFallback} aria-hidden="true">{team.abbr}</span>
         )}
@@ -70,7 +83,7 @@ function TeamRow({ team, possessionLabel }: {
   );
 }
 
-function GameCard({ game, stale }: { game: LiveScoreGame; stale: boolean }) {
+function GameCard({ game, stale }: { game: Omit<LiveScoreGame, "injuries">; stale: boolean }) {
   const live = game.phase === "in";
   const possession = possessionTeam(game, stale);
   return (
@@ -94,10 +107,10 @@ function GameCard({ game, stale }: { game: LiveScoreGame; stale: boolean }) {
   );
 }
 
-export default function LiveScoreboard({ initial }: { initial: LiveScoreSnapshot }) {
+export default function LiveScoreboard({ initial }: { initial: ScoreboardSnapshot }) {
   const router = useRouter();
   const snapshot = initial;
-  const [expiredSnapshot, setExpiredSnapshot] = useState<LiveScoreSnapshot | null>(null);
+  const [expiredSnapshot, setExpiredSnapshot] = useState<ScoreboardSnapshot | null>(null);
 
   useEffect(() => {
     if (!snapshot.games.some(game => game.phase === 'in')) return;

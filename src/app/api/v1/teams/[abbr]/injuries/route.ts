@@ -4,6 +4,7 @@ import { getDataSliceStatus } from "@/lib/data-status";
 import { getLatestInjuryWeek, listInjuryReports } from "@/lib/injury-data";
 import { withApiErrorHandling } from "@/lib/api-route-error";
 import { getCurrentReserves } from '@/lib/current-reserves';
+import { parseInjuryPracticeDate } from '@/lib/injury-practice-date';
 
 /** Rejects a non-numeric season rather than letting NaN reach the query. */
 function parseSeason(raw: string | null): number | null | "invalid" {
@@ -22,14 +23,17 @@ async function handleGET(req: NextRequest, context: { params: Promise<{ abbr: st
   if (seasonParsed === "invalid") return jsonApiError(auth, 400, "invalid_request", "season must be a valid year");
   const seasonRaw = seasonParsed === null ? null : String(seasonParsed);
   const weekRaw = params.get("week");
+  const practiceDate = parseInjuryPracticeDate(params.get("date"));
+  if (practiceDate === 'invalid') return jsonApiError(auth, 400, "invalid_request", "date must be a valid YYYY-MM-DD date");
 
-  const latest = seasonRaw ? null : await getLatestInjuryWeek();
-  const seasonYear = seasonRaw ? Number.parseInt(seasonRaw, 10) : latest?.seasonYear ?? null;
-  const week = weekRaw ? Number.parseInt(weekRaw, 10) : seasonRaw ? null : latest?.week ?? null;
+  const latest = await getLatestInjuryWeek();
+  const seasonYear = seasonRaw ? Number.parseInt(seasonRaw, 10) : practiceDate ? null : latest?.seasonYear ?? null;
+  const week = weekRaw ? Number.parseInt(weekRaw, 10) : seasonRaw || practiceDate ? null : latest?.week ?? null;
 
   const result = await listInjuryReports({
     seasonYear,
     week,
+    practiceDate,
     team: abbr,
     status: params.get("status"),
     limit: 500,
@@ -49,11 +53,12 @@ async function handleGET(req: NextRequest, context: { params: Promise<{ abbr: st
       team: abbr.toUpperCase(),
       season_year: seasonYear,
       week,
+      date: practiceDate,
       returned: result.rows.length,
       total: result.total,
       data_status: dataStatus,
     },
-  });
+  }, undefined, { excludeCurrentReserves: true });
 }
 
 export const GET = withApiErrorHandling(handleGET);

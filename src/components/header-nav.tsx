@@ -11,7 +11,7 @@ export type HeaderNavGroup = {
     href: string;
     label: string;
     description?: string;
-    tone?: "default" | "primary";
+    tone?: "default" | "primary" | "success" | "support";
   }>;
 };
 
@@ -98,6 +98,19 @@ export default function HeaderNav({ groups }: HeaderNavProps) {
         {groups.map((group) => {
           const isOpen = openLabel === group.label;
 
+          if (group.items.length === 0) {
+            return (
+              <div key={group.label} className="nav-menu">
+                <div className="nav-split">
+                  <Link href={group.href} className="nav-pill-link" onClick={() => {
+                    setOpenLabel(null);
+                    setMobileOpen(false);
+                  }}>{group.label}</Link>
+                </div>
+              </div>
+            );
+          }
+
           return (
             <div
               key={group.label}
@@ -141,7 +154,7 @@ export default function HeaderNav({ groups }: HeaderNavProps) {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`nav-dropdown-link${item.tone === "primary" ? " is-primary" : ""}`}
+                    className={`nav-dropdown-link${item.tone && item.tone !== "default" ? ` is-${item.tone}` : ""}`}
                     role="menuitem"
                     onClick={() => {
                       setOpenLabel(null);

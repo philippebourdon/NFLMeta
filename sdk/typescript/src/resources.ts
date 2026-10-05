@@ -1,5 +1,6 @@
 import { NFLMetaClientCore } from "./client.js";
 import type {
+  TeamCapSpace, CapSpaceMeta, GameInactives, InjuryMeta, InjuryRow, DepthChartRow, DefenseSpecialTeamsPlay,
   FieldValue,
   GameListItem,
   HealthSnapshot,
@@ -57,9 +58,15 @@ export class HealthResource extends BaseResource {
   }
 }
 
+export class InjuriesResource extends BaseResource {
+  list(query?: QueryParams): Promise<NFLMetaEnvelope<InjuryRow[], InjuryMeta>> {
+    return this.request(apiPath("injuries"), query);
+  }
+}
+
 export class LiveScoresResource extends BaseResource {
-  get(): Promise<NFLMetaEnvelope<LiveScoreGame[], LiveScoreMeta>> {
-    return this.request<LiveScoreGame[], LiveScoreMeta>(apiPath("live-scores"));
+  get(query?: QueryParams): Promise<NFLMetaEnvelope<LiveScoreGame[], LiveScoreMeta>> {
+    return this.request<LiveScoreGame[], LiveScoreMeta>(apiPath("live-scores"), query);
   }
 }
 
@@ -94,6 +101,20 @@ export class SeasonsResource extends BaseResource {
 }
 
 export class TeamsResource extends BaseResource {
+  depthChart(abbr: string, query?: QueryParams): Promise<NFLMetaEnvelope<{groups: Record<string, DepthChartRow[]>; entries: DepthChartRow[]}, ListMeta>> {
+    return this.request(apiPath("teams", abbr, "depth-chart"), query);
+  }
+  capSpace(query?: QueryParams): Promise<NFLMetaEnvelope<TeamCapSpace[], CapSpaceMeta>> {
+    return this.request(apiPath("teams", "cap-space"), query);
+  }
+
+  injuries(abbr: string, query?: QueryParams): Promise<NFLMetaEnvelope<InjuryRow[], InjuryMeta>> {
+    return this.request(apiPath("teams", abbr, "injuries"), query);
+  }
+
+  roster(abbr: string, query?: QueryParams): Promise<NFLMetaEnvelope<UnknownRecord[], ListMeta>> {
+    return this.request(apiPath("teams", abbr, "roster"), query);
+  }
   list(query?: QueryParams): Promise<NFLMetaEnvelope<TeamListItem[], ListMeta>> {
     return this.request<TeamListItem[], ListMeta>(apiPath("teams"), query);
   }
@@ -164,6 +185,9 @@ export class TeamsResource extends BaseResource {
 }
 
 export class PlayersResource extends BaseResource {
+  injuries(playerKey: string, query?: QueryParams): Promise<NFLMetaEnvelope<InjuryRow[], InjuryMeta>> {
+    return this.request(apiPath("players", playerKey, "injuries"), query);
+  }
   list(query?: QueryParams): Promise<NFLMetaEnvelope<PlayerListItem[], ListMeta>> {
     return this.request<PlayerListItem[], ListMeta>(apiPath("players"), query);
   }
@@ -212,8 +236,8 @@ export class PlayersResource extends BaseResource {
     return this.requestField(apiPath("players", playerKey, "honors", field));
   }
 
-  roster(playerKey: string): Promise<NFLMetaEnvelope<UnknownRecord>> {
-    return this.request(apiPath("players", playerKey, "roster"));
+  roster(playerKey: string, query?: QueryParams): Promise<NFLMetaEnvelope<UnknownRecord[]>> {
+    return this.request(apiPath("players", playerKey, "roster"), query);
   }
 
   games(playerKey: string, query?: QueryParams): Promise<NFLMetaEnvelope<UnknownRecord[], UnknownRecord>> {
@@ -282,6 +306,12 @@ export class PlayersResource extends BaseResource {
 }
 
 export class GamesResource extends BaseResource {
+  defenseSpecialTeams(gameId: number, query?: QueryParams): Promise<NFLMetaEnvelope<DefenseSpecialTeamsPlay[], ListMeta>> {
+    return this.request(apiPath("games", gameId, "defense-special-teams"), query);
+  }
+  inactives(gameId: number): Promise<NFLMetaEnvelope<GameInactives, ListMeta>> {
+    return this.request(apiPath("games", gameId, "inactives"));
+  }
   list(query?: QueryParams): Promise<NFLMetaEnvelope<GameListItem[], ListMeta>> {
     return this.request<GameListItem[], ListMeta>(apiPath("games"), query);
   }
@@ -660,4 +690,13 @@ export class ReferenceResource extends BaseResource {
   venueField<TValue = unknown>(key: string, field: string): Promise<NFLMetaEnvelope<FieldValue<TValue>>> {
     return this.requestField(apiPath("reference", "venues", key, field));
   }
+}
+
+export class DepthChartsResource extends BaseResource {
+  list(query?: QueryParams): Promise<NFLMetaEnvelope<DepthChartRow[], ListMeta>> { return this.request(apiPath("depth-charts"), query); }
+  changes(query?: QueryParams): Promise<NFLMetaEnvelope<UnknownRecord[], ListMeta>> { return this.request(apiPath("depth-charts", "changes"), query); }
+}
+
+export class RostersResource extends BaseResource {
+  list(query?: QueryParams): Promise<NFLMetaEnvelope<UnknownRecord[], ListMeta>> { return this.request(apiPath("rosters"), query); }
 }

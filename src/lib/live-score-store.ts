@@ -1,5 +1,6 @@
 import { resolveTeamBrandLogoUrl } from "@/lib/asset-catalog";
 import { query } from "@/lib/db";
+import { confirmedGameInactive } from "@/lib/live-score-feed";
 
 export type LiveScoreGame = {
   possessionAbbr?: string | null;
@@ -16,6 +17,22 @@ export type LiveScoreGame = {
   statusDetail: string;
   observedAt: string | null;
   changedAt: string | null;
+  injuries: LiveGameInjury[];
+};
+
+export type LiveGameInjury = {
+  playerName: string;
+  teamAbbr: string;
+  injuryType: string;
+  state: "injury_reported" | "questionable_to_return" | "doubtful_to_return" | "cleared_to_return" | "returned" | "ruled_out";
+  reportedAt: string;
+  returnedAt: string | null;
+  ruledOutAt: string | null;
+  lastObservedAt: string;
+  confirmedOutcome?: "did_not_return" | null;
+  outcomeSourceUrl?: string | null;
+  outcomeReplacementName?: string | null;
+  outcomeReportedAt?: string | null;
 };
 
 export type LiveScoreSnapshot = {
@@ -78,6 +95,23 @@ type FeedStatusRow = {
   play_last_error_code: string | null;
 };
 
+type InjuryRow = {
+  game_id: number;
+  player_name: string;
+  team_abbr: string;
+  injury_type: string;
+  state: LiveGameInjury["state"];
+  reported_at: Date | string;
+  returned_at: Date | string | null;
+  ruled_out_at: Date | string | null;
+  last_observed_at: Date | string;
+  confirmed_outcome: "did_not_return" | null;
+  outcome_source_url: string | null;
+  outcome_replacement_name: string | null;
+  outcome_reported_at: Date | string | null;
+  game_info?: unknown;
+};
+
 function iso(value: Date | string | null): string | null {
   if (!value) return null;
   const date = value instanceof Date ? value : new Date(value);
@@ -123,10 +157,45 @@ export async function getGameLiveState(gameId: number): Promise<GameLiveState | 
   }
 }
 
+/** Game-page injury notices. These are in-game observations, not weekly reports. */
+export async function getGameLiveInjuries(gameId: number): Promise<LiveGameInjury[]> {
+  try {
+    const rows = await query<InjuryRow>(
+      `SELECT injury.game_id, injury.player_name, injury.team_abbr, injury.injury_type, injury.state,
+              injury.reported_at, injury.returned_at, injury.ruled_out_at, injury.last_observed_at,
+              injury.confirmed_outcome, injury.outcome_source_url, injury.outcome_replacement_name,
+              injury.outcome_reported_at,
+              box.game_info
+         FROM live_game_injuries injury
+         LEFT JOIN game_boxscore_stats box ON box.game_id = injury.game_id
+        WHERE injury.game_id = $1
+        ORDER BY injury.reported_at, injury.player_name`,
+      [gameId],
+    );
+    return rows.filter((row) => !confirmedGameInactive(row.game_info, row.team_abbr, row.player_name)).map((row) => ({
+      playerName: row.player_name,
+      teamAbbr: row.team_abbr,
+      injuryType: row.injury_type,
+      state: row.state,
+      reportedAt: iso(row.reported_at)!,
+      returnedAt: iso(row.returned_at),
+      ruledOutAt: iso(row.ruled_out_at),
+      lastObservedAt: iso(row.last_observed_at)!,
+      confirmedOutcome: row.confirmed_outcome,
+      outcomeSourceUrl: row.outcome_source_url,
+      outcomeReplacementName: row.outcome_replacement_name,
+      outcomeReportedAt: iso(row.outcome_reported_at),
+    }));
+  } catch (error) {
+    if (!missingLiveScoreSchema(error)) throw error;
+    return [];
+  }
+}
+
 export async function getLiveScoreSnapshot(now = new Date()): Promise<LiveScoreSnapshot> {
   const generatedAt = now.toISOString();
   try {
-    const [statusRows, rows] = await Promise.all([
+    const [statusRows, rows, injuryRows] = await Promise.all([
       query<FeedStatusRow>(
         `SELECT last_success_at, last_change_at, next_poll_seconds,
                 play_last_success_at, play_consecutive_failures,
@@ -176,6 +245,17 @@ export async function getLiveScoreSnapshot(now = new Date()): Promise<LiveScoreS
            CROSS JOIN target_week target
           WHERE g.week = target.week OR live.phase = 'in'
           ORDER BY COALESCE(g.kickoff_at, g.game_date::timestamptz), g.id`,
+      ),
+      query<InjuryRow>(
+        `SELECT injury.game_id, injury.player_name, injury.team_abbr, injury.injury_type, injury.state,
+                injury.reported_at, injury.returned_at, injury.ruled_out_at, injury.last_observed_at,
+                injury.confirmed_outcome, injury.outcome_source_url, injury.outcome_replacement_name,
+                injury.outcome_reported_at,
+                box.game_info
+           FROM live_game_injuries injury
+           LEFT JOIN game_boxscore_stats box ON box.game_id = injury.game_id
+          WHERE injury.reported_at >= now() - interval '8 days'
+          ORDER BY injury.reported_at, injury.player_name`,
       ),
     ]);
 
@@ -227,6 +307,21 @@ export async function getLiveScoreSnapshot(now = new Date()): Promise<LiveScoreS
             ? row.possession_abbr : null,
           observedAt: iso(row.observed_at),
           changedAt: iso(row.changed_at),
+          injuries: injuryRows.filter((injury) => injury.game_id === row.game_id
+            && !confirmedGameInactive(injury.game_info, injury.team_abbr, injury.player_name)).map((injury) => ({
+            playerName: injury.player_name,
+            teamAbbr: injury.team_abbr,
+            injuryType: injury.injury_type,
+            state: injury.state,
+            reportedAt: iso(injury.reported_at)!,
+            returnedAt: iso(injury.returned_at),
+            ruledOutAt: iso(injury.ruled_out_at),
+            lastObservedAt: iso(injury.last_observed_at)!,
+            confirmedOutcome: injury.confirmed_outcome,
+            outcomeSourceUrl: injury.outcome_source_url,
+            outcomeReplacementName: injury.outcome_replacement_name,
+            outcomeReportedAt: iso(injury.outcome_reported_at),
+          })),
         };
       }),
     };

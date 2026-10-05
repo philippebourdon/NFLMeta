@@ -19,8 +19,11 @@ from .resources import (
     ContributorsResource,
     ExecutivesResource,
     GamesResource,
+    DepthChartsResource,
+    RostersResource,
     HallOfFameResource,
     HealthResource,
+    InjuriesResource,
     HistoryResource,
     LiveScoresResource,
     MetadataResource,
@@ -44,6 +47,7 @@ class NFLMetaClient(NFLMetaClientCore):
     def __init__(self, **kwargs: Any) -> None:
         super().__init__(**kwargs)
         self.health = HealthResource(self)
+        self.injuries = InjuriesResource(self)
         self.live_scores = LiveScoresResource(self)
         self.usage = UsageResource(self)
         self.metadata = MetadataResource(self)
@@ -51,6 +55,8 @@ class NFLMetaClient(NFLMetaClientCore):
         self.teams = TeamsResource(self)
         self.players = PlayersResource(self)
         self.games = GamesResource(self)
+        self.rosters = RostersResource(self)
+        self.depth_charts = DepthChartsResource(self)
         self.plays = PlaysResource(self)
         self.playoff_games = PlayoffGamesResource(self)
         self.standings = StandingsResource(self)

@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { Elements, PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import styles from "./page.module.css";
@@ -10,58 +10,85 @@ type IntentState = {
   publishableKey: string;
 } | null;
 
-function InnerVerificationForm({
+export function InnerVerificationForm({
   accountEmail,
   accountName,
   collectBillingAddress,
+  onRestart,
 }: {
   accountEmail: string;
   accountName: string | null;
   collectBillingAddress: boolean;
+  onRestart: () => void;
 }) {
   const stripe = useStripe();
   const elements = useElements();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [ready, setReady] = useState(false);
+  const [reloadRequired, setReloadRequired] = useState(false);
+  const inFlight = useRef(false);
+  const mounted = useRef(true);
+  useEffect(() => {
+    mounted.current = true;
+    return () => { mounted.current = false; };
+  }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!stripe || !elements) {
+    if (!stripe || !elements || !ready || inFlight.current || !mounted.current) {
       return;
     }
 
+    inFlight.current = true;
     setSubmitting(true);
     setError(null);
-    const submission = await elements.submit();
-    if (submission.error) {
-      setError(submission.error.message || "Card details are incomplete.");
-      setSubmitting(false);
-      return;
-    }
+    try {
+      const submission = await elements.submit();
+      if (!mounted.current) return;
+      if (submission.error) {
+        setError(submission.error.message || "Card details are incomplete.");
+        return;
+      }
 
-    // confirmSetup, not confirmPayment: this stores the card and charges nothing.
-    const result = await stripe.confirmSetup({
-      elements,
-      confirmParams: {
-        return_url: `${window.location.origin}/customer-portal?verify=return`,
-        payment_method_data: {
-          billing_details: {
-            email: accountEmail,
-            ...(accountName ? { name: accountName } : {}),
+      // confirmSetup, not confirmPayment: this stores the card and charges nothing.
+      const result = await stripe.confirmSetup({
+        elements,
+        confirmParams: {
+          return_url: `${window.location.origin}/customer-portal?verify=return`,
+          payment_method_data: {
+            billing_details: {
+              email: accountEmail,
+              ...(accountName ? { name: accountName } : {}),
+            },
           },
         },
-      },
-    });
+      });
 
-    if (result.error) {
-      setError(result.error.message || "Card verification failed.");
-      setSubmitting(false);
+      if (mounted.current && result.error) {
+        setError(result.error.message || "Card verification failed.");
+      }
+    } catch {
+      if (mounted.current) {
+        setReady(false);
+        setReloadRequired(true);
+        setError("The secure card form could not be read. Reload the form and try again.");
+      }
+    } finally {
+      inFlight.current = false;
+      if (mounted.current) setSubmitting(false);
     }
   }
 
   return (
     <form onSubmit={handleSubmit} className={styles.inlineForm}>
       <PaymentElement
+        onReady={() => { setReady(true); setReloadRequired(false); setError(null); }}
+        onLoadError={() => {
+          setReady(false);
+          setReloadRequired(true);
+          setError("The secure card form could not load. Reload it to try again.");
+        }}
         options={{
           business: { name: "NFLMeta" },
           defaultValues: {
@@ -89,9 +116,10 @@ function InnerVerificationForm({
           },
         }}
       />
-      {error ? <p className="flash flash-error">{error}</p> : null}
-      <button type="submit" className={styles.primaryAction} disabled={!stripe || !elements || submitting}>
-        {submitting ? "Verifying..." : "Verify Card And Activate Key"}
+      {error ? <p role="alert" className="flash flash-error">{error}</p> : null}
+      {reloadRequired ? <button type="button" className={styles.primaryAction} onClick={onRestart} disabled={submitting}>Reload secure card form</button> : null}
+      <button type="submit" className={styles.primaryAction} disabled={!stripe || !elements || !ready || submitting}>
+        {submitting ? "Verifying..." : !ready ? "Waiting for secure card form..." : "Verify Card And Activate Key"}
       </button>
     </form>
   );
@@ -184,6 +212,7 @@ export default function FreeTierCardVerification({
             accountEmail={accountEmail}
             accountName={accountName}
             collectBillingAddress={collectBillingAddress}
+            onRestart={() => setIntent(null)}
           />
         </Elements>
       ) : null}

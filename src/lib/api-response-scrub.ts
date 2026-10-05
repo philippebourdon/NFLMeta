@@ -98,6 +98,8 @@ const PROVENANCE_KEYS = new Set([
  */
 const PROVENANCE_EXCEPTIONS = new Set([
   "source_team_abbr",
+  // Our own previously stored NFLMeta key, not an upstream identifier.
+  "source_player_key",
   "source",
   "headshot_url",
   // The power-ranking attribution link. It is the only camelCase sourceUrl in

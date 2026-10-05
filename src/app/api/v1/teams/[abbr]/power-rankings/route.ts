@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { apiAuthErrorResponse, authenticateApiKey, jsonApiError, jsonWithRateLimit } from "@/lib/api-key";
-import { buildTeamPowerRankingsData } from "@/lib/api-slice-data";
+import { buildTeamPowerRankingsData, filterTeamPowerRankingsData, parsePowerRankingSource } from "@/lib/api-slice-data";
 import { getTeamProfile } from "@/lib/public-data";
 import { getTeamProfileExtras } from "@/lib/team-profile-data";
 import { withApiErrorHandling } from "@/lib/api-route-error";
@@ -9,6 +9,11 @@ async function handleGET(req: NextRequest, ctx: { params: Promise<{ abbr: string
   const auth = await authenticateApiKey(req);
   if (!auth.ok) {
     return apiAuthErrorResponse(auth);
+  }
+
+  const source = parsePowerRankingSource(req.nextUrl.searchParams.get("source"));
+  if (!source.ok) {
+    return jsonApiError(auth, 400, "invalid_request", "source must be cbs, espn, or nfl");
   }
 
   const { abbr } = await ctx.params;
@@ -20,7 +25,9 @@ async function handleGET(req: NextRequest, ctx: { params: Promise<{ abbr: string
   }
 
   const extras = await getTeamProfileExtras(profile.team.id, profile.seasonYear);
-  return jsonWithRateLimit(auth, { data: buildTeamPowerRankingsData(profile, extras) });
+  return jsonWithRateLimit(auth, {
+    data: filterTeamPowerRankingsData(buildTeamPowerRankingsData(profile, extras), source.source),
+  });
 }
 
 export const GET = withApiErrorHandling(handleGET);

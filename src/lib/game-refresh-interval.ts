@@ -4,9 +4,13 @@ export function gameRefreshIntervalMs(
   gameDate: string | null,
   hasFinalScore: boolean,
   now = Date.now(),
+  awaitingFinalTimeline = false,
 ): number | null {
   if (phase === "in") return 5_000;
-  if (phase === "post") return null;
+  if (phase === "post") {
+    const kickoff = gameDate ? Date.parse(gameDate) : NaN;
+    return awaitingFinalTimeline && Number.isFinite(kickoff) && now - kickoff <= 8 * 60 * 60_000 ? 10_000 : null;
+  }
   if (phase === "pre") return 30_000;
   // A scheduled game may not have a live-feed row yet. Keep checking until
   // it does, without polling historical games that lack scores.

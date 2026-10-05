@@ -1,11 +1,15 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
+import type { RetentionOffer } from "@/lib/subscription-retention";
+import RetentionChoices from "./retention-choices";
 import type { BillingInterval } from "@/lib/customer-plans";
 import SubmitButton from "../submit-button";
 import styles from "./page.module.css";
 
 type PlanChangeReviewActionProps = {
+  retentionOffer?: RetentionOffer | null;
   action: (formData: FormData) => void | Promise<void>;
   plan: string;
   interval: BillingInterval;
@@ -30,6 +34,7 @@ type PlanChangeReviewActionProps = {
 
 export default function PlanChangeReviewAction({
   action,
+  retentionOffer,
   plan,
   interval,
   planName,
@@ -65,6 +70,36 @@ export default function PlanChangeReviewAction({
         ) : null}
       </div>
     );
+  }
+
+  if (plan === "free" && retentionOffer) {
+    // Use a conservative count of full monthly periods from the next renewal.
+    // A month is at most 31 days; do not promise savings on already-paid time.
+    const savesOverHalf = retentionOffer.choices.length > 0 && retentionOffer.choices.every(choice => {
+      const fullMonths = Math.floor((Date.parse(choice.resumeAt) - Date.parse(retentionOffer.renewalAt)) / (31 * 86400 * 1000));
+      return fullMonths * retentionOffer.monthlyAmount > choice.amount * 2;
+    });
+    return <div className={styles.retentionReview}>
+      <div className={styles.retentionBrandHeader}>
+        <div className={styles.retentionHeading}>
+          <h3 className={styles.retentionGraphicTitle}><Image src="/brand/retention/before-you-go-yellow.png"
+            width={2172} height={724} alt="Before you go" sizes="(max-width: 540px) 225px, 350px" loading="eager" /></h3>
+          <p className={styles.retentionTicket}>Keep your {currentPlanName} access with one payment{savesOverHalf ? " and save over 50%." : "."}</p>
+        </div>
+        <Image className={styles.retentionOfferBadge} src="/brand/retention/special-offer-yellow.png"
+          width={1254} height={1254} alt="NFLMeta special offer" sizes="(max-width: 540px) 112.5px, 162.5px" loading="eager" />
+      </div>
+      <RetentionChoices offer={retentionOffer} />
+      <div className={styles.retentionExit}>
+        <button type="button" className={styles.retentionSecondary} onClick={() => setReviewOpen(false)}>Keep monthly billing</button>
+        <form action={action}>
+          <input type="hidden" name="plan" value="free" />
+          <input type="hidden" name="interval" value="month" />
+          <SubmitButton idleLabel="Cancel subscription" pendingLabel="Canceling..." className={styles.retentionSecondary} />
+        </form>
+      </div>
+      <p className={styles.retentionFinePrint}>Canceling stops renewal.{nextRenewalDateLabel ? ` Paid access stays until ${nextRenewalDateLabel}.` : " Paid access stays through your current paid period."}</p>
+    </div>;
   }
 
   return (
@@ -124,7 +159,7 @@ export default function PlanChangeReviewAction({
           </a>
         </div>
       ) : null}
-      <form action={action} className={styles.reviewActions}>
+      <form id={plan === "free" ? "cancel-subscription-review" : undefined} action={action} className={styles.reviewActions}>
         <input type="hidden" name="plan" value={plan} />
         <input type="hidden" name="interval" value={interval} />
         {typeof dueNowLabel === "string" ? <input type="hidden" name="prorationDate" value={String(prorationDate)} /> : null}

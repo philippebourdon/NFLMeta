@@ -94,8 +94,12 @@ export function cacheTtlMsForRequest(
   data: unknown,
   now = new Date(),
 ): number {
-  if (path === "/api/v1/usage") return 0;
-  if (/\/inactives$/.test(path)) return 0;
+  if (path === "/api/v1/usage" || path === "/api/v1/live-scores" || /^\/api\/v1\/games\/[^/]+\/defense-special-teams\/?$/.test(path)) return 0;
+  // A published narrative can be corrected or withdrawn at any time. Feed reads
+  // must also observe entries added after an empty cursor page.
+  if (/^\/api\/v1\/injury-update(?:s|-incidents|-developments)\/?$/.test(path)
+    || /^\/api\/v1\/players\/[^/]+\/injury-update\/?$/.test(path)) return 0;
+  if (/\/(?:inactives|live-player-stats)$/.test(path)) return 0;
   if (path === "/api/v1/health") return CACHE_TTLS_MS.health;
 
   const queryYears = ["season", "season_year", "year", "year_from", "year_to", "election_year"]
@@ -106,6 +110,10 @@ export function cacheTtlMsForRequest(
     .map((match) => Number.parseInt(match[1], 10))[0];
   const season = queryYear ?? pathYear ?? seasonFromData(data);
   if (season !== undefined && season < currentNflSeason(now)) return CACHE_TTLS_MS.historical;
+
+  // Official practice/designation reports are snapshots, separate from narratives.
+  // Keep historical policy above; current player reports must not inherit profiles.
+  if (/^\/api\/v1\/(?:injuries|(?:players|teams)\/[^/]+\/injuries)\/?$/.test(path)) return CACHE_TTLS_MS.current;
 
   if (/^\/api\/v1\/(?:reference|hall-of-fame|super-bowls|all-star-games|seasons)(?:\/|$)/.test(path)
     || path === "/api/v1/stats/players/catalog") {
@@ -121,7 +129,8 @@ export function cacheKey(path: string, query: Record<string, QueryValue> | undef
     const values = Array.isArray(rawValue) ? rawValue : [rawValue];
     return values.map((value) => [key, String(value)]);
   });
-  pairs.sort(([leftKey, leftValue], [rightKey, rightValue]) => leftKey.localeCompare(rightKey) || leftValue.localeCompare(rightValue));
+  // Stable key-only sorting preserves repeated-value order and first-value semantics.
+  pairs.sort(([leftKey], [rightKey]) => leftKey.localeCompare(rightKey));
   const search = new URLSearchParams(pairs).toString();
   return search ? `${path}?${search}` : path;
 }

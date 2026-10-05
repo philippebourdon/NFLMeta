@@ -1,5 +1,5 @@
 export const SERVER_NAME = "nflmeta";
-export const SERVER_VERSION = "0.8.0";
+export const SERVER_VERSION = "0.10.0";
 
 export const CUSTOMER_TOOL_NAMES = [
   "resolve",
@@ -13,6 +13,9 @@ export const CUSTOMER_TOOL_NAMES = [
   "get_roster",
   "get_team_cap_space",
   "get_game_inactives",
+  "get_defense_special_teams",
+  "get_live_scores",
+  "get_live_player_stats",
   "get_current_context",
   "list_games",
   "get_season",
@@ -57,6 +60,7 @@ export const CATALOG = {
     profiles: ["get_player", "get_team", "get_game", "get_playoff_game", "get_season"],
     currentAndHistorical: ["get_current_context", "list_games", "get_playoff_picture", "get_roster", "get_standings", "list_draft_picks", "list_top_100", "get_player_jersey_history", "list_transactions", "get_player_transactions", "list_injuries", "get_player_injuries", "get_depth_chart", "list_depth_chart_changes", "get_super_bowl"],
     analytics: ["compare_players", "get_player_game_log", "get_weekly_stats", "get_game_leaders", "get_player_leaders", "get_career_leaders"],
+    livePlayerStats: ["get_live_player_stats"],
     playByPlay: ["search_plays", "summarize_play_efficiency", "get_play_efficiency_leaders"],
     reference: ["get_hall_of_fame", "get_pro_bowl", "search_officials", "get_venue", "get_team_branding", "get_broadcast_rights"],
     advanced: ["nflmeta_api_get"],

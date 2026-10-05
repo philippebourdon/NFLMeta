@@ -15,6 +15,54 @@ from nflmeta.client import NFLMetaClientCore, TransportResponse, _default_transp
 
 
 class NFLMetaClientTests(unittest.TestCase):
+    def test_new_integration_helpers(self):
+        from urllib.parse import urlsplit, parse_qs
+        urls = []
+        payload = {"data": [{"kick_distance": None}], "meta": {"coverage_details": {"exhaustive": False}}}
+        def transport(url, headers, timeout):
+            urls.append(url)
+            return TransportResponse(status=200, headers={}, payload=payload)
+        client = NFLMetaClient(api_key="test", transport=transport)
+        self.assertEqual(client.games.defense_special_teams(123, offset=100).data, payload["data"])
+        client.teams.depth_chart("NE")
+        client.depth_charts.list(season=2026)
+        client.depth_charts.changes(team="NE")
+        client.rosters.list(season=2020, week=2)
+        client.players.injuries("a/b", date="2020-09-16")
+        self.assertEqual(urlsplit(urls[0]).path, "/api/v1/games/123/defense-special-teams")
+        self.assertEqual(parse_qs(urlsplit(urls[-1]).query)["date"], ["2020-09-16"])
+
+    def test_current_season_helpers(self) -> None:
+        urls = []
+        meta = {"total": None, "current_reserves": [{"confirmation": "reported_pending"}]}
+        def transport(url, headers, timeout):
+            urls.append(url)
+            return TransportResponse(status=200, headers={}, payload={"data": [], "meta": meta})
+        client = NFLMetaClient(api_key="test", transport=transport)
+        client.teams.cap_space(season=2026, team_abbr="NE")
+        client.games.inactives(22773)
+        self.assertEqual(client.injuries.list(week=1).meta, meta)
+        client.teams.injuries("NE")
+        client.players.injuries("a/b")
+        self.assertIsNone(client.teams.roster("NE", count=True).meta["total"])
+        from urllib.parse import urlsplit, parse_qs
+        self.assertEqual([urlsplit(u).path for u in urls], ["/api/v1/teams/cap-space", "/api/v1/games/22773/inactives", "/api/v1/injuries", "/api/v1/teams/NE/injuries", "/api/v1/players/a%2Fb/injuries", "/api/v1/teams/NE/roster"])
+        self.assertEqual(parse_qs(urlsplit(urls[-1]).query)["count"], ["true"])
+
+    def test_historical_roster_filters(self) -> None:
+        from urllib.parse import urlsplit, parse_qs
+        urls = []
+        def transport(url, headers, timeout):
+            urls.append(url)
+            return TransportResponse(status=200, headers={}, payload={"data": [], "meta": {"pre_kickoff_verified": False}})
+        client = NFLMetaClient(api_key="test", transport=transport)
+        client.teams.roster("NE", season=2020, week=2, season_type="REG")
+        client.players.roster("a/b", season=2020, week=18, season_type="POST", count=True)
+        self.assertEqual(parse_qs(urlsplit(urls[0]).query)["week"], ["2"])
+        self.assertEqual(urlsplit(urls[1]).path, "/api/v1/players/a%2Fb/roster")
+        self.assertEqual(parse_qs(urlsplit(urls[1]).query)["season_type"], ["POST"])
+        self.assertEqual(parse_qs(urlsplit(urls[1]).query)["count"], ["true"])
+
     def test_adds_api_key_and_parses_rate_limits(self) -> None:
         captured: dict[str, object] = {}
 
@@ -98,6 +146,16 @@ class NFLMetaClientTests(unittest.TestCase):
 
         self.assertTrue(str(captured["url"]).endswith("/api/v1/coaches/mike-tomlin/history/team_records"))
         self.assertEqual(result.data["value"][0]["team_abbr"], "PIT")
+
+    def test_live_score_filters(self) -> None:
+        from urllib.parse import urlsplit, parse_qs
+        captured = []
+        def transport(url, headers, timeout):
+            captured.append(url)
+            return TransportResponse(status=200, headers={}, payload={"data": [], "meta": {}})
+        NFLMetaClient(api_key="test", transport=transport).live_scores.get(phase="in", game_ids="12345,12346")
+        self.assertEqual(urlsplit(captured[0]).path, "/api/v1/live-scores")
+        self.assertEqual(parse_qs(urlsplit(captured[0]).query), {"phase": ["in"], "game_ids": ["12345,12346"]})
 
     def test_live_scores_use_the_supported_v1_resource(self) -> None:
         captured: dict[str, object] = {}

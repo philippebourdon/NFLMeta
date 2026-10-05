@@ -31,9 +31,14 @@ class HealthResource(BaseResource):
         return self._request(_api_path("health"))
 
 
+class InjuriesResource(BaseResource):
+    def list(self, **query: Any) -> APIResponse:
+        return self._request(_api_path("injuries"), query=query or None)
+
+
 class LiveScoresResource(BaseResource):
-    def get(self) -> APIResponse:
-        return self._request(_api_path("live-scores"))
+    def get(self, **query: Any) -> APIResponse:
+        return self._request(_api_path("live-scores"), query=query or None)
 
 
 class UsageResource(BaseResource):
@@ -61,6 +66,18 @@ class SeasonsResource(BaseResource):
 
 
 class TeamsResource(BaseResource):
+    def depth_chart(self, abbr: str, **query: Any) -> APIResponse:
+        return self._request(_api_path("teams", abbr, "depth-chart"), query=query or None)
+
+    def cap_space(self, **query: Any) -> APIResponse:
+        return self._request(_api_path("teams", "cap-space"), query=query or None)
+
+    def injuries(self, abbr: str, **query: Any) -> APIResponse:
+        return self._request(_api_path("teams", abbr, "injuries"), query=query or None)
+
+    def roster(self, abbr: str, **query: Any) -> APIResponse:
+        return self._request(_api_path("teams", abbr, "roster"), query=query or None)
+
     def list(self, **query: Any) -> APIResponse:
         return self._request(_api_path("teams"), query=query or None)
 
@@ -114,6 +131,9 @@ class TeamsResource(BaseResource):
 
 
 class PlayersResource(BaseResource):
+    def injuries(self, player_key: str, **query: Any) -> APIResponse:
+        return self._request(_api_path("players", player_key, "injuries"), query=query or None)
+
     def list(self, **query: Any) -> APIResponse:
         return self._request(_api_path("players"), query=query or None)
 
@@ -150,8 +170,8 @@ class PlayersResource(BaseResource):
     def honors_field(self, player_key: str, field: str) -> APIResponse:
         return self._field(_api_path("players", player_key, "honors", field))
 
-    def roster(self, player_key: str) -> APIResponse:
-        return self._request(_api_path("players", player_key, "roster"))
+    def roster(self, player_key: str, **query: Any) -> APIResponse:
+        return self._request(_api_path("players", player_key, "roster"), query=query or None)
 
     def games(self, player_key: str, **query: Any) -> APIResponse:
         return self._request(_api_path("players", player_key, "games"), query=query or None)
@@ -197,6 +217,12 @@ class PlayersResource(BaseResource):
 
 
 class GamesResource(BaseResource):
+    def defense_special_teams(self, game_id: int, **query: Any) -> APIResponse:
+        return self._request(_api_path("games", game_id, "defense-special-teams"), query=query or None)
+
+    def inactives(self, game_id: int) -> APIResponse:
+        return self._request(_api_path("games", game_id, "inactives"))
+
     def list(self, **query: Any) -> APIResponse:
         return self._request(_api_path("games"), query=query or None)
 
@@ -489,3 +515,14 @@ class ReferenceResource(BaseResource):
 
     def venue_field(self, key: str, field: str) -> APIResponse:
         return self._field(_api_path("reference", "venues", key, field))
+
+class DepthChartsResource(BaseResource):
+    def list(self, **query: Any) -> APIResponse:
+        return self._request(_api_path("depth-charts"), query=query or None)
+
+    def changes(self, **query: Any) -> APIResponse:
+        return self._request(_api_path("depth-charts", "changes"), query=query or None)
+
+class RostersResource(BaseResource):
+    def list(self, **query: Any) -> APIResponse:
+        return self._request(_api_path("rosters"), query=query or None)

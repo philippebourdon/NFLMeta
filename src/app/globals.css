@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+:root {
+  --font-ibm-sans: "IBM Plex Sans Variable";
+  --font-ibm-mono: "IBM Plex Mono";
+}
+
 * {
   box-sizing: border-box;
 }
@@ -267,3 +272,6 @@ a {
     flex-direction: column;
   }
 }
+
+/* Support remains easy to find inside the existing menu and footer. */
+.footer-links a.support-link { color: #ffabb3; font-weight: 700; }

@@ -286,3 +286,14 @@
     grid-template-columns: 1fr;
   }
 }
+
+.pressBanner {
+  display: block;
+  margin-bottom: 16px;
+}
+
+.pressBanner img {
+  display: block;
+  width: 100%;
+  height: auto;
+}

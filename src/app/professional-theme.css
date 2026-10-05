@@ -253,6 +253,7 @@ a:hover {
 
 .nav {
   display: flex;
+  flex-wrap: nowrap;
   align-items: center;
   gap: 9px;
   justify-self: center;
@@ -270,6 +271,7 @@ a:hover {
 
 .nav-menu {
   position: relative;
+  flex-shrink: 0;
 }
 
 .nav-menu::after {
@@ -322,6 +324,7 @@ a:hover {
 
 .nav-pill-link {
   display: inline-flex;
+  white-space: nowrap;
   align-items: center;
   padding: 8px 8px 8px 12px;
   font-weight: 700;
@@ -527,6 +530,33 @@ a:hover {
     radial-gradient(circle at 56% 78%, rgba(77, 142, 226, 0.32) 0%, rgba(77, 142, 226, 0.18) 34%, transparent 62%),
     linear-gradient(135deg, rgba(43, 101, 174, 0.96), rgba(27, 68, 127, 0.98));
   border-color: rgba(169, 211, 248, 0.42);
+}
+
+.nav-dropdown-link.is-success {
+  background: linear-gradient(135deg, #176344, #10452f);
+  border: 1px solid #4f9f78;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 8%);
+}
+
+.nav-dropdown-link.is-success:hover,
+.nav-dropdown-link.is-success:focus-visible {
+  background: linear-gradient(135deg, #207951, #165c3e);
+}
+
+.nav-dropdown-link.is-support {
+  background: linear-gradient(135deg, #982d40, #692133);
+  border: 1px solid #d76e80;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 8%);
+}
+
+.nav-dropdown-link.is-support:hover,
+.nav-dropdown-link.is-support:focus-visible {
+  background: linear-gradient(135deg, #ae354b, #82283d);
+}
+
+.nav-dropdown-link.is-success .nav-dropdown-description,
+.nav-dropdown-link.is-support .nav-dropdown-description {
+  color: #e2eaf2;
 }
 
 .nav-dropdown-label {
@@ -2482,6 +2512,19 @@ h2 {
     font-size: 34px;
   }
 
+}
+
+/* Switch the header before desktop controls would collide. */
+@media (min-width: 1051px) and (max-width: 1280px) {
+  .header-bar { column-gap: 10px; }
+  .nav { gap: 4px; }
+  .nav-pill-link { padding-left: 8px; padding-right: 6px; font-size: 10px; letter-spacing: 0.04em; }
+  .nav-pill-toggle { width: 22px; }
+  .brand { padding-right: 8px; }
+  .header-actions { gap: 6px; }
+}
+
+@media (max-width: 1050px) {
   .nav-shell {
     display: grid;
     gap: 10px;

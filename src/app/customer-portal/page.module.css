@@ -141,6 +141,18 @@
   flex-direction: column;
 }
 
+.usageCard {
+  border-color: rgba(246, 194, 92, 0.7);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(223, 153, 40, 0.22), transparent 46%),
+    linear-gradient(180deg, #19374c, #0b263b);
+  box-shadow: 0 20px 48px rgba(2, 8, 20, 0.3), inset 0 1px 0 rgba(255, 225, 164, 0.12);
+}
+
+.usageCard .sectionLabel {
+  color: #ffd47c;
+}
+
 .sectionLabel {
   display: inline-flex;
   margin-bottom: 8px;
@@ -532,6 +544,100 @@
 
 .usageBlock p {
   margin: 0;
+}
+
+.rowPackOffer {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 18px;
+  border: 1px solid rgba(250, 200, 103, 0.8);
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(111, 68, 13, 0.9), rgba(58, 44, 23, 0.94));
+  box-shadow: 0 12px 28px rgba(7, 18, 29, 0.28);
+}
+
+.rowPackOffer h3 {
+  margin: 0;
+  color: #fff8e6;
+  font-size: 1.25rem;
+}
+
+.rowPackOffer p {
+  margin: 0;
+  color: #ffedc8;
+  line-height: 1.5;
+}
+
+.rowPackEyebrow {
+  color: #ffe4a0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.rowPackForm {
+  display: grid;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.rowPackForm label {
+  color: #fff8e6;
+  font-weight: 700;
+}
+
+.rowPackControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.rowPackSelect {
+  flex: 1 1 215px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid #f3c76f;
+  border-radius: 10px;
+  background: #102b3d;
+  color: #fff;
+  color-scheme: dark;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.rowPackSelect option {
+  background: #102b3d;
+  color: #fff;
+}
+
+.rowPackSelect:focus-visible,
+.rowPackButton:focus-visible {
+  outline: 3px solid #fff2ce;
+  outline-offset: 3px;
+}
+
+.rowPackButton {
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1px solid #ffdf8a;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #ffdd86, #eeb94c);
+  color: #2e210d;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+@media (max-width: 520px) {
+  .rowPackSelect,
+  .rowPackButton {
+    flex-basis: 100%;
+    width: 100%;
+  }
 }
 
 .usageBar {

@@ -1,29 +1,19 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
+import "@fontsource-variable/ibm-plex-sans/wght.css";
+import "@fontsource/ibm-plex-mono/latin-400.css";
+import "@fontsource/ibm-plex-mono/latin-500.css";
+import "@fontsource/ibm-plex-mono/latin-600.css";
 import Link from "next/link";
 import { Suspense } from "react";
 import ClerkProviderShell from "@/components/clerk-provider-shell";
 import HeaderAccountActions from "@/components/header-account-actions";
 import HeaderNav, { type HeaderNavGroup } from "@/components/header-nav";
-import { productReleases } from "@/lib/product-releases";
 import SiteAnalyticsTracker from "@/components/site-analytics-tracker";
 import { UiImage } from "@/components/ui-image";
 import { siteBaseUrl } from "@/lib/site-url";
 import "./globals.css";
 import "./prod-parity.css";
 import "./professional-theme.css";
-
-const ibmSans = IBM_Plex_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-ibm-sans",
-});
-
-const ibmMono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-ibm-mono",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteBaseUrl()),
@@ -46,13 +36,6 @@ export const metadata: Metadata = {
     description:
       "Explore players, teams, rosters, games, live scores, standings and historical play-by-play through the public site or documented API.",
   },
-  icons: {
-    icon: [
-      { url: "/brand/icon.png", type: "image/png", sizes: "512x512" },
-      { url: "/brand/icon.svg", type: "image/svg+xml" },
-    ],
-    apple: [{ url: "/brand/icon.png", sizes: "512x512" }],
-  },
 };
 
 const navGroups: HeaderNavGroup[] = [
@@ -61,8 +44,8 @@ const navGroups: HeaderNavGroup[] = [
     href: "/changelog",
     className: "nav-seasons",
     items: [
-      ...productReleases.slice(0, 3).map(release => ({ href: `/changelog#v${release.version}`, label: `v${release.version}`, description: release.title })),
       { href: "/changelog", label: "All Updates", description: "New features, API endpoints, MCP tools, improvements, and fixes." },
+      { href: "/about", label: "About", description: "Learn about NFLMeta." },
     ],
   },
   {
@@ -113,15 +96,17 @@ const navGroups: HeaderNavGroup[] = [
     ],
   },
   {
-    label: "API",
+    label: "Features",
     href: "/api-docs",
     className: "nav-seasons",
     items: [
-      { href: "/api-docs/playground", label: "Try the API", description: "No signup or key. Run editable, small historical demo examples.", tone: "primary" },
+      { href: "/plex", label: "NFLMeta for Plex", description: "Your NFL games, beautifully organized. Hosted metadata and artwork for Plex.", tone: "success" },
+      { href: "/demo", label: "Try the API", description: "Edit requests for saved 2026 scores, play-by-play, and historical analytics." },
+      { href: "/support#new-ticket", label: "Submit a ticket", description: "Open a ticket, view replies, and get help with NFLMeta.", tone: "support" },
       { href: "/faq", label: "FAQ", description: "Integration answers, coverage, and onboarding guidance." },
       {
         href: "/api-docs",
-        label: "Documentation",
+        label: "API Documentation",
         description: "Endpoint reference and request examples.",
       },
       { href: "/sdk", label: "SDKs", description: "Official TypeScript and Python clients for the NFLMeta API." },
@@ -140,7 +125,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 
   return (
     <html lang="en">
-      <body className={`${ibmSans.variable} ${ibmMono.variable}`}>
+      <body>
         <ClerkProviderShell>
           <Suspense fallback={null}>
             <SiteAnalyticsTracker />
@@ -198,9 +183,11 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
                 />
               </Link>
               <div className="footer-links">
+                <Link href="/support" className="support-link">Open a ticket</Link>
+                <span>·</span>
                 <Link href="/about">About</Link>
                 <span>·</span>
-                <Link href="/about#data-sources">Data Sources</Link>
+                <Link href="/data-sources">Data Sources</Link>
                 <span>·</span>
                 <Link href="/status">Status</Link>
                 <span>·</span>
@@ -211,6 +198,12 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
                 <Link href="/terms">Terms of Service</Link>
                 <span>·</span>
                 <Link href="/privacy">Privacy</Link>
+                <span>·</span>
+                <a href="https://github.com/philippebourdon/NFLMeta" target="_blank" rel="noopener noreferrer" aria-label="NFLMeta on GitHub (opens in a new tab)" title="NFLMeta on GitHub">
+                  <svg viewBox="0 0 24 24" className="footer-mail-icon" aria-hidden="true" fill="currentColor">
+                    <path d="M12 .297a12 12 0 0 0-3.793 23.385c.6.111.82-.261.82-.577v-2.234c-3.338.726-4.043-1.416-4.043-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.083-.729.083-.729 1.205.085 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.108-.775.418-1.305.762-1.605-2.665-.303-5.467-1.334-5.467-5.931 0-1.31.469-2.381 1.236-3.221-.124-.303-.536-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.52 11.52 0 0 1 12 6.097c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.655 1.652.243 2.873.119 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.625-5.479 5.922.43.372.823 1.102.823 2.222v3.293c0 .319.216.694.825.576A12.001 12.001 0 0 0 12 .297Z" />
+                  </svg>
+                </a>
                 <span>·</span>
                 <a href="mailto:info@sportsdbx.com" aria-label="Email SportDBX">
                   <svg viewBox="0 0 24 24" className="footer-mail-icon" aria-hidden="true">

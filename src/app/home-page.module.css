@@ -12,6 +12,44 @@
   background: #030a15;
 }
 
+.announcementBar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(90deg, #172237, #30291e, #172237);
+  border-bottom: 1px solid #79603b;
+}
+
+.announcement {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 6px 14px;
+  color: #f0dec1;
+  font-size: 11px;
+  line-height: 1.25;
+  text-decoration: none;
+}
+
+.announcement + .announcement {
+  border-left: 1px solid rgba(237, 190, 106, 0.28);
+}
+
+.announcement:hover { color: #fff; background: rgba(255, 255, 255, 0.05); }
+.announcement:focus-visible { outline: 3px solid #e9b961; outline-offset: -4px; }
+.announcementBadge { background: #edbe6a; color: #172031; border-radius: 4px; padding: 2px 6px; font-size: 8px; text-transform: uppercase; font-weight: 800; letter-spacing: .08em; }
+.announcementBadgeSoon { color: #06140c; background: #45d483; }
+.announcementCta { color: #edbe6a; font-weight: 650; white-space: nowrap; }
+.announcementGridironarr .announcementCta { color: #6ce39e; }
+@media (max-width: 600px) {
+  .announcementBar { display: grid; grid-template-columns: 1fr 1fr; }
+  .announcement { gap: 6px; min-width: 0; min-height: 32px; padding: 6px 8px; font-size: 10px; }
+  .announcement strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .announcementCta { display: none; }
+}
+
 .hero {
   position: relative;
   isolation: isolate;
@@ -233,8 +271,9 @@
 
 .footballArt {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   padding: 0 14px 14px;
+  transform: translateY(-16px);
   pointer-events: none;
 }
 

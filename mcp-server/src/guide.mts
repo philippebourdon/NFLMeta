@@ -42,7 +42,13 @@ Every tool defaults to \`format: "summary"\`. Add \`fields\` with field names or
 
 Use completions for team abbreviations, stat names, position groups, seasons, players, and games. Invalid inputs return suggestions. If \`resolve\` finds equally plausible entities, choose from its elicitation prompt or inspect the returned alternatives.
 
+## Live player statistics
+
+Use \`get_live_player_stats({ game_id })\` for near-real-time game totals. Poll every 30 seconds at most. Check stale and status; live values are provisional and may be incomplete while plays are reviewed. Final stats are reconciled after import and include confirmed fields only; unconfirmed extras are omitted. This covers recent regular-season games with a collected play feed, not all historical games.
+
 ## Source and freshness limits
 
-NFLMeta does not provide salary-cap, contract, betting-line, injury-news, projection, live player-stat, or broadcast-grade feeds. Do not invent those facts. Live scores and provisional play-by-play are best effort rather than an SLA; completed-game analytical play-by-play remains the authoritative research surface. Resource subscriptions are not advertised.
+Use \`get_team_cap_space\` for daily estimated available cap space; check observed_at and stale. This is not contract detail or a real-time cap ledger. Use \`get_game_inactives\` for confirmed game-day lists; not_available does not mean everyone is active. Injury responses preserve report_status and game_status, with current reserves separately in meta.current_reserves. A reported_pending reserve move is not confirmed. Request format: "full" when inspecting this metadata. List totals may be null or absent unless count=true is supported and requested.
+
+NFLMeta does not provide contract, betting-line, projection, or broadcast-grade feeds. Do not invent those facts or treat injury reports as guaranteed breaking-news coverage. Live scores and provisional play-by-play are best effort rather than an SLA; completed-game analytical play-by-play remains the authoritative research surface. Resource subscriptions are not advertised.
 `;

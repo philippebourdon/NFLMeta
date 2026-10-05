@@ -604,7 +604,7 @@ export function createNFLMetaMcpServer(
       },
     },
     async ({ player_a, player_b, team_a, team_b, season }) => ({
-      messages: [{ role: "user", content: { type: "text", text: `Evaluate a hypothetical trade of ${player_a}${team_a ? ` (${team_a})` : ""} for ${player_b}${team_b ? ` (${team_b})` : ""}${season ? ` using ${season} context` : ""}. Resolve both players, use compare_players, player reports, and team_season_report or get_roster as appropriate. NFLMeta has no salary-cap or contract endpoint, so state that limitation explicitly and do not invent cap figures.` } }],
+      messages: [{ role: "user", content: { type: "text", text: `Evaluate a hypothetical trade of ${player_a}${team_a ? ` (${team_a})` : ""} for ${player_b}${team_b ? ` (${team_b})` : ""}${season ? ` using ${season} context` : ""}. Resolve both players, use compare_players, player reports, and team_season_report or get_roster as appropriate. Use get_team_cap_space for daily estimated available cap space and check its freshness. NFLMeta does not provide player contract details or trade cap-charge calculations; do not invent them.` } }],
     }),
   );
 
@@ -830,10 +830,11 @@ export function createNFLMetaMcpServer(
         view: z.enum(["profile", "identity", "bio", "ids", "career", "career-seasons", "honors", "roster", "history", "records", "splits"]).default("profile"),
         season: yearSchema.optional(),
         season_type: seasonTypeSchema.optional(),
+        week:z.number().int().min(1).max(25).optional(),
       }),
       annotations: readOnlyAnnotations,
     },
-    async ({ player_key, view, season, season_type, fields, format }, extra) => {
+    async ({ player_key, view, season, season_type, week, fields, format }, extra) => {
       const suffix = view === "profile" ? "" : view === "career-seasons" ? "/career/seasons" : `/${view}`;
       const field = singleSimpleField(fields);
       const supportsFieldRoute = !["profile", "career-seasons", "roster"].includes(view);
@@ -842,7 +843,8 @@ export function createNFLMetaMcpServer(
       // ALL means "do not filter" to that route, which is an absent parameter.
       const seasonTypeParam = view === "career-seasons" && season_type === "ALL" ? undefined : season_type;
       return runApi(async () => {
-        const result = await api.get(`/api/v1/players/${segment(player_key)}${suffix}${field && supportsFieldRoute ? `/${segment(field)}` : ""}`, query({ season, season_type: seasonTypeParam }), extra.signal);
+        if (week!==undefined && (view!=="roster" || season===undefined || season_type==="ALL")) throw Error('week requires roster view, season and REG/POST season_type');
+        const result = await api.get(`/api/v1/players/${segment(player_key)}${suffix}${field && supportsFieldRoute ? `/${segment(field)}` : ""}`, query({ season, season_type: view==="roster" && week===undefined?undefined:seasonTypeParam, ...(week!==undefined?{week}:{}) }), extra.signal);
         return field && supportsFieldRoute ? expandFieldResult(result, field) : result;
       }, presentation({ fields, format }));
     },
@@ -928,11 +930,13 @@ export function createNFLMetaMcpServer(
     "get_roster",
     {
       title: "Get a team roster",
-      description: "Get a roster snapshot. Example: get_roster({ team_abbr: 'PIT', season: 2025, position: 'QB' }).",
-      inputSchema: strictInput({ team_abbr: teamSchema, season: yearSchema.optional(), status: z.string().max(40).optional(), position: z.string().max(20).optional(), search: z.string().max(120).optional(), limit: limitSchema, offset: offsetSchema }),
+      description: "Get a season roster, or a weekly historical roster with season, week and season_type (REG or POST). Historical snapshots do not verify pre-kickoff availability. Example: get_roster({ team_abbr: 'PIT', season: 2025, position: 'QB' }).",
+      inputSchema: strictInput({ team_abbr: teamSchema, season: yearSchema.optional(), week:z.number().int().min(1).max(25).optional(), season_type:z.enum(["REG","POST"]).optional(), status: z.string().max(40).optional(), position: z.string().max(20).optional(), search: z.string().max(120).optional(), count: z.boolean().optional().describe("Request the optional total count"), limit: limitSchema, offset: offsetSchema }),
       annotations: readOnlyAnnotations,
     },
     async ({ team_abbr, season, fields, format, ...rest }, extra) => runApi(async () => {
+      if (rest.week!==undefined && season===undefined) throw Error('Weekly roster requests require season');
+      if (rest.season_type!==undefined && rest.week===undefined) throw Error('season_type requires week');
       await assertValidTeam(team_abbr);
       return api.get(`/api/v1/teams/${segment(team_abbr)}/roster`, query({ year: season, ...rest }), extra.signal);
     }, presentation({ fields, format })),
@@ -1132,6 +1136,18 @@ export function createNFLMetaMcpServer(
     },
     async ({ season, team_abbr, fields, format }, extra) => runApi(() =>
       api.get('/api/v1/teams/cap-space', query({ season, team_abbr }), extra.signal), presentation({ fields, format })),
+  );
+
+  registerTool(
+    "get_live_player_stats",
+    {
+      title: "Get live game player stats",
+      description: "Near-real-time player totals for a recent regular-season game. Check status, stale and provisional. Live totals are provisional; reconciled final responses contain confirmed fields only and omit unconfirmed extras. Poll no faster than every 30 seconds. Example: get_live_player_stats({ game_id: 22787 }).",
+      inputSchema: strictInput({ game_id: z.number().int().positive() }),
+      annotations: readOnlyAnnotations,
+    },
+    async ({ game_id, fields, format }, extra) => runApi(() =>
+      api.get(`/api/v1/games/${game_id}/live-player-stats`, undefined, extra.signal), presentation({ fields, format })),
   );
 
   registerTool(
@@ -1530,6 +1546,7 @@ export function createNFLMetaMcpServer(
       description: "Read recorded weekly practice participation and final game-status designations across the league or for one team. This is a report snapshot, not live medical or breaking-news data. Example: list_injuries({ season: 2025, week: 12, team_abbr: 'KC', status: 'Questionable' }).",
       inputSchema: strictInput({
         season: yearSchema.optional(),
+        date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().describe("Practice report date; not an as-of timestamp"),
         week: z.number().int().min(1).max(25).optional(),
         team_abbr: teamSchema.optional(),
         status: z.enum(INJURY_STATUSES).optional(),
@@ -1552,11 +1569,12 @@ export function createNFLMetaMcpServer(
       inputSchema: strictInput({
         player_key: z.string().trim().min(1).max(160),
         season: yearSchema.optional(),
+        date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().describe("Practice report date; not an as-of timestamp"),
       }),
       annotations: readOnlyAnnotations,
     },
-    async ({ player_key, season, fields, format }, extra) => runApi(
-      () => api.get(`/api/v1/players/${segment(player_key)}/injuries`, query({ season }), extra.signal),
+    async ({ player_key, season, date, fields, format }, extra) => runApi(
+      () => api.get(`/api/v1/players/${segment(player_key)}/injuries`, query({ season, date }), extra.signal),
       presentation({ fields, format }),
     ),
   );
@@ -1602,6 +1620,22 @@ export function createNFLMetaMcpServer(
       return api.get("/api/v1/depth-charts/changes", query({ ...args, team: team_abbr }), extra.signal);
     }, presentation({ fields, format })),
   );
+
+  registerTool("get_defense_special_teams", {
+    title: "Get defensive and special-teams game events",
+    description: "Selected kicking, turnover, sack, safety, block and defensive/special-teams scoring plays. Inspect coverage_details: unknown attribution or distance is not zero; this is not a fantasy total. Scoreboard is total team scoring.",
+    inputSchema: strictInput({ game_id: z.number().int().positive().max(2147483647), limit: limitSchema, offset: z.number().int().min(0).max(2000).default(0) }),
+    annotations: readOnlyAnnotations,
+  }, async ({game_id, fields, format, ...args}, extra) => runApi(
+    () => api.get(`/api/v1/games/${game_id}/defense-special-teams`, query(args), extra.signal), presentation({fields, format})));
+
+  registerTool("get_live_scores", {
+    title: "Get filtered live scores",
+    description: "Read the current live-score window. Filter phase or game IDs; only returned games count as rows. Omit phase when polling IDs to retain final scores.",
+    inputSchema: strictInput({ phase: z.enum(["pre","in","post"]).optional(), game_ids: z.array(z.number().int().positive().max(2147483647)).min(1).max(100).optional() }),
+    annotations: readOnlyAnnotations,
+  }, async ({phase, game_ids, fields, format}, extra) => runApi(
+    () => api.get("/api/v1/live-scores", query({phase, game_ids: game_ids?.join(",")}), extra.signal), presentation({fields, format})));
 
   registerTool("get_my_usage", { title: "Get MCP API-key usage", description: "Check the downstream API key's quota and usage. Example: get_my_usage({ format: 'summary' }).", inputSchema: strictInput({}), annotations: readOnlyAnnotations }, async (args, extra) => runApi(() => api.get("/api/v1/usage", undefined, extra.signal), presentation(args)));
 

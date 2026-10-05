@@ -12,7 +12,7 @@ from urllib.request import HTTPRedirectHandler, Request, build_opener
 from .errors import NFLMetaInvalidUrlError, NFLMetaTimeoutError, create_http_error
 from .types import APIResponse, QueryParams, RateLimitInfo
 
-__version__ = "0.1.5"
+__version__ = "0.2.0"
 USER_AGENT = f"nflmeta-python/{__version__}"
 
 

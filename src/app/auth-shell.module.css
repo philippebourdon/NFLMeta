@@ -6,6 +6,16 @@
   align-items: start;
 }
 
+.plexShell { max-width:1100px; margin:35px auto; gap:28px; }
+.plexHero { background:radial-gradient(ellipse at top left,#5a462955,transparent 65%),#142234; border-color:#6d5835; padding:36px; }
+.plexBrand { display:flex; align-items:center; gap:16px; font-size:25px; }
+.plexBrand span { font-size:16px; color:#b8c6d8; }
+.plexBrand img { object-fit:contain; }
+.plexHero h1 { color:#f0c16c; line-height:1.15; }
+.plexHero a { color:#f0c16c; text-underline-offset:4px; }
+.plexHero small { color:#adbdcf; line-height:1.7; }
+@media(max-width:600px) { .plexShell { margin:15px auto; } .plexHero { padding:24px; } }
+
 .hero {
   position: relative;
   overflow: hidden;

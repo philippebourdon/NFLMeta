@@ -426,3 +426,15 @@
     display: grid;
   }
 }
+
+.freshnessNotice {
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid #d9a441;
+  border-radius: 10px;
+  background: #fff8e8;
+  color: #59400d;
+  font-size: 0.9rem;
+}
+.freshnessNotice p { margin: 0.4rem 0; }
+.freshnessNotice ul { margin: 0.5rem 0 0; padding-left: 1.25rem; }

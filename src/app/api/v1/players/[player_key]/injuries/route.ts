@@ -3,6 +3,7 @@ import { apiAuthErrorResponse, authenticateApiKey, jsonApiError, jsonWithRateLim
 import { listInjuryReports } from "@/lib/injury-data";
 import { withApiErrorHandling } from "@/lib/api-route-error";
 import { getCurrentReserves } from '@/lib/current-reserves';
+import { parseInjuryPracticeDate } from '@/lib/injury-practice-date';
 
 /** Rejects a non-numeric season rather than letting NaN reach the query. */
 function parseSeason(raw: string | null): number | null | "invalid" {
@@ -20,10 +21,13 @@ async function handleGET(req: NextRequest, context: { params: Promise<{ player_k
   const seasonParsed = parseSeason(params.get("season") || params.get("year"));
   if (seasonParsed === "invalid") return jsonApiError(auth, 400, "invalid_request", "season must be a valid year");
   const seasonRaw = seasonParsed === null ? null : String(seasonParsed);
+  const practiceDate = parseInjuryPracticeDate(params.get("date"));
+  if (practiceDate === 'invalid') return jsonApiError(auth, 400, "invalid_request", "date must be a valid YYYY-MM-DD date");
 
   const result = await listInjuryReports({
     playerKey: decodeURIComponent(playerKey),
     seasonYear: seasonRaw ? Number.parseInt(seasonRaw, 10) : null,
+    practiceDate,
     limit: 500,
     offset: 0,
   });
@@ -34,10 +38,11 @@ async function handleGET(req: NextRequest, context: { params: Promise<{ player_k
       current_reserves: await getCurrentReserves(null, decodeURIComponent(playerKey)),
       player_key: decodeURIComponent(playerKey),
       season_year: seasonRaw ? Number.parseInt(seasonRaw, 10) : null,
+      date: practiceDate,
       returned: result.rows.length,
       total: result.total,
     },
-  });
+  }, undefined, { excludeCurrentReserves: true });
 }
 
 export const GET = withApiErrorHandling(handleGET);

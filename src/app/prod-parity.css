@@ -2990,6 +2990,19 @@ body {
   gap: 16px;
 }
 
+.team-profile-grid > .profile-card {
+  align-self: start;
+  min-width: 0;
+}
+
+.team-reserve-card { grid-column: 1 / -1; min-width: 0; }
+.team-reserve-summary summary { cursor: pointer; font-weight: 700; }
+.team-reserve-summary summary span { font-weight: 400; }
+.team-reserve-summary p { font-size: .85rem; margin: 10px 0; }
+.team-reserve-summary ul { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 8px 24px; }
+.team-reserve-summary li { display: flex; flex-direction: column; min-width: 0; overflow-wrap: anywhere; }
+.team-reserve-summary li span { font-size: .85rem; }
+
 .team-head-coach-media {
   display: flex;
   align-items: center;

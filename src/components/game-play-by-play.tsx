@@ -1,7 +1,9 @@
 import { Fragment } from "react";
+import { hasEndGameEvent } from "@/lib/final-timeline";
 import {
   formatDownAndDistance,
   formatFieldPosition,
+  groupPlaysChronologically,
   isScoringPlay,
   isTurnoverPlay,
   quarterLabel,
@@ -9,6 +11,8 @@ import {
   shortQuarterLabel,
 } from "@/lib/game-play-presentation";
 import type { GameTimelinePlay } from "@/lib/plays-data";
+import type { LiveGameInjury } from "@/lib/live-score-store";
+import { gameInjuryNotices } from "@/lib/game-injury-presentation";
 
 import styles from "./game-play-by-play.module.css";
 
@@ -17,37 +21,44 @@ type TeamSummary = {
   name: string;
 };
 
-function groupByQuarter(plays: GameTimelinePlay[]): Array<[number | null, GameTimelinePlay[]]> {
-  const groups = new Map<number | null, GameTimelinePlay[]>();
-  for (const play of plays) {
-    const group = groups.get(play.quarter) || [];
-    group.push(play);
-    groups.set(play.quarter, group);
-  }
-  return [...groups.entries()].sort(([a], [b]) => (a ?? -1) - (b ?? -1));
-}
-
 function readablePlayType(playType: string | null): string {
   if (!playType) return "Game note";
   return playType.replaceAll("_", " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
+function reportedTime(value: string): string {
+  const time = new Date(value);
+  return Number.isNaN(time.getTime()) ? "Time unavailable" : new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York", hour: "numeric", minute: "2-digit", timeZoneName: "short",
+  }).format(time);
+}
+
 export default function GamePlayByPlay({
   plays,
+  injuries = [],
   away,
   home,
+  gameFinal = false,
+  gameLive = false,
 }: {
   plays: GameTimelinePlay[];
+  injuries?: LiveGameInjury[];
   away: TeamSummary;
   home: TeamSummary;
+  gameFinal?: boolean;
+  gameLive?: boolean;
 }) {
-  const quarters = groupByQuarter(plays);
+  const quarters = groupPlaysChronologically(plays);
+  const injuryNotices = gameInjuryNotices(injuries, gameFinal);
+  const numberedQuarters = plays.flatMap((play) => play.quarter == null ? [] : [play.quarter]);
+  const currentQuarter = numberedQuarters.length ? Math.max(...numberedQuarters) : null;
   const driveCount = new Set(plays.map((play) => play.drive_number).filter((drive) => drive != null)).size;
   const scoringCount = plays.filter(isScoringPlay).length;
   const turnoverCount = plays.filter(isTurnoverPlay).length;
-  const live = plays.some((play) => play.is_live);
+  const live = !gameFinal && (gameLive || plays.some((play) => play.is_live));
+  const awaitingEnd = gameFinal && !hasEndGameEvent(plays);
 
-  if (!plays.length) {
+  if (!plays.length && !injuryNotices.length) {
     return (
       <section className={styles.unavailable} aria-labelledby="play-by-play-heading">
         <div className={styles.icon} aria-hidden="true">PBP</div>
@@ -61,13 +72,13 @@ export default function GamePlayByPlay({
   }
 
   return (
-    <details className={styles.details} open={live || undefined}>
+    <details className={styles.details} open={live || awaitingEnd || undefined}>
       <summary className={styles.summary}>
         <span className={styles.icon} aria-hidden="true">PBP</span>
         <span className={styles.summaryCopy}>
-          <span className={styles.eyebrow}>{live ? "Updating during the game" : "Every snap. Every swing."}</span>
-          <strong>{live ? "Follow live play-by-play" : "Explore the complete play-by-play"}</strong>
-          <span>{plays.length.toLocaleString()} {live ? "live " : ""}timeline events across {driveCount.toLocaleString()} drives</span>
+          <span className={styles.eyebrow}>{awaitingEnd ? "Final score — awaiting closing timeline entry" : live ? "Updating during the game" : gameFinal ? "Final game timeline" : "Every snap. Every swing."}</span>
+          <strong>{awaitingEnd ? "Final play-by-play update pending" : live ? "Follow live play-by-play" : plays.length ? "Explore the complete play-by-play" : "View game injury notices"}</strong>
+          <span>{plays.length.toLocaleString()} {live ? "live " : ""}play events across {driveCount.toLocaleString()} drives{injuryNotices.length ? ` · ${injuryNotices.length} injury ${injuryNotices.length === 1 ? "notice" : "notices"}` : ""}</span>
         </span>
         <span className={styles.openAction}>
           <span className={styles.openLabel}>Open timeline</span>
@@ -81,7 +92,7 @@ export default function GamePlayByPlay({
           <div>
             <p className={styles.eyebrow}>The game, possession by possession</p>
             <h2>Full game timeline</h2>
-            <p>{live
+            <p>{!plays.length ? "Play-by-play has not arrived yet. Game injury notices are shown below as they are reported." : awaitingEnd ? `${away.name} at ${home.name} is final. The closing timeline entry has not arrived yet.` : live
               ? `${away.name} at ${home.name}, updating automatically on a best-effort basis.`
               : `${away.name} at ${home.name}, reconstructed from the opening kick through the final whistle.`}</p>
           </div>
@@ -91,23 +102,51 @@ export default function GamePlayByPlay({
           </div>
         </div>
 
-        <div className={styles.metrics} aria-label="Play-by-play summary">
+        {injuryNotices.length ? (
+          <section className={styles.injurySection} aria-labelledby="game-injury-notices-heading">
+            <div className={styles.injuryHead}>
+              <div>
+                <p className={styles.eyebrow}>In-game updates</p>
+                <h3 id="game-injury-notices-heading">Injury notices</h3>
+              </div>
+            </div>
+            <ol className={styles.injuryList}>
+              {injuryNotices.map((notice) => (
+                <li className={styles.injuryNotice} key={`${notice.teamAbbr}-${notice.playerName}-${notice.reportedAt}`}>
+                  <div className={styles.injuryIdentity}>
+                    <strong>{notice.playerName}</strong>
+                    <span>{notice.teamAbbr}</span>
+                  </div>
+                  <p>{notice.injuryLabel} <time dateTime={notice.reportedAt}>{reportedTime(notice.reportedAt)}</time></p>
+                  <p className={notice.unresolved ? styles.injuryPending : styles.injuryResolved}>
+                    {notice.status}
+                    {notice.statusAt ? <> · <time dateTime={notice.statusAt}>{reportedTime(notice.statusAt)}</time></> : null}
+                    {notice.sourceUrl ? <> · <a href={notice.sourceUrl} target="_blank" rel="noopener noreferrer">Source</a></> : null}
+                  </p>
+                </li>
+              ))}
+            </ol>
+          </section>
+        ) : null}
+
+        {plays.length ? <div className={styles.metrics} aria-label="Play-by-play summary">
           <div><strong>{plays.length.toLocaleString()}</strong><span>Events</span></div>
           <div><strong>{driveCount.toLocaleString()}</strong><span>Drives</span></div>
           <div><strong>{scoringCount.toLocaleString()}</strong><span>Scoring plays</span></div>
           <div><strong>{turnoverCount.toLocaleString()}</strong><span>Turnovers</span></div>
-        </div>
+        </div> : null}
 
         <div className={styles.quarters}>
           {quarters.map(([quarter, quarterPlays]) => (
-            <section className={styles.quarter} key={quarter ?? "notes"} aria-labelledby={`quarter-${quarter ?? "notes"}`}>
-              <div className={styles.quarterHead}>
+            <details className={styles.quarter} key={quarter ?? "notes"} open={quarter === currentQuarter || undefined}>
+              <summary className={styles.quarterHead}>
                 <span>{shortQuarterLabel(quarter)}</span>
                 <div>
                   <h3 id={`quarter-${quarter ?? "notes"}`}>{quarterLabel(quarter)}</h3>
                   <p>{quarterPlays.length.toLocaleString()} events</p>
                 </div>
-              </div>
+                <span className={styles.quarterChevron} aria-hidden="true">⌄</span>
+              </summary>
 
               <ol className={styles.timeline}>
                 {quarterPlays.map((play, index) => {
@@ -164,7 +203,7 @@ export default function GamePlayByPlay({
                   );
                 })}
               </ol>
-            </section>
+            </details>
           ))}
         </div>
       </div>

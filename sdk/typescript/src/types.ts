@@ -25,7 +25,7 @@ export interface FieldValue<TValue = unknown> {
 }
 
 export interface ListMeta {
-  total?: number;
+  total?: number | null;
   limit?: number;
   offset?: number;
   returned?: number;
@@ -34,6 +34,7 @@ export interface ListMeta {
 }
 
 export interface PaginationOptions {
+  count?: boolean;
   limit?: number;
   offset?: number;
 }
@@ -42,6 +43,34 @@ export interface RequestOptions {
   query?: QueryParams;
   signal?: AbortSignal;
   headers?: HeadersInit;
+}
+
+export interface TeamCapSpace { team_abbr: string; available_cap_space: number }
+export interface CapSpaceMeta extends ListMeta {
+  season: number; currency: 'USD'; metric: 'cap_space'; observed_at: string;
+  stale: boolean; refresh_schedule: string;
+}
+export interface GameInactives {
+  game_id: number;
+  teams: { team_abbr: string; status: 'confirmed' | 'not_available'; published_at: string | null;
+    players: { name: string; position: string; note: string | null }[] }[];
+}
+export interface CurrentReserve {
+  player_key: string; display_name: string; position: string | null; team_abbr: string;
+  roster_status: string; label: string; confirmation: 'confirmed' | 'reported_pending'; updated_at: string | null;
+}
+export interface InjuryMeta extends ListMeta { current_reserves: CurrentReserve[] }
+export interface PracticeDay extends UnknownRecord { date: string; status: 'DNP' | 'LP' | 'FP'; historical_backfill?: boolean; practiced?: boolean | null; report_reason?: string | null; non_injury_related?: boolean; first_observed_at?: string | null }
+export interface InjuryRow extends UnknownRecord { report_status?: string | null; game_status?: string | null; practice_days?: PracticeDay[]; practice_only?: boolean; no_game_designation?: boolean }
+export interface DepthChartRow extends UnknownRecord {
+  player_key: string | null; source_player_key?: string | null; identity_status?: 'matched' | 'merged' | 'unmatched';
+  player_name: string; team_abbr: string | null; position_group: string; position_abbr: string;
+  position_slot: number | null; depth_rank: number; captured_at: string;
+}
+export interface DefenseSpecialTeamsEvent { type: string; unit: 'defense' | 'special_teams' | 'unknown'; team_abbr: string | null; points: number | null; evidence: 'source_fields' | 'description' }
+export interface DefenseSpecialTeamsPlay extends UnknownRecord {
+  game_id: number; play_number: number; kick_distance: number | null; field_goal_result: string | null;
+  extra_point_result: string | null; kicker_player_key: string | null; provisional: boolean; events: DefenseSpecialTeamsEvent[];
 }
 
 export interface NFLMetaClientOptions {

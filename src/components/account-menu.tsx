@@ -49,6 +49,9 @@ export default function AccountMenu({ avatarUrl, label }: AccountMenuProps) {
           <Link href="/account" className={styles.item} role="menuitem" onClick={() => setOpen(false)}>
             Account
           </Link>
+          <Link href="/support" className={styles.item} role="menuitem" onClick={() => setOpen(false)}>
+            Support tickets
+          </Link>
           <SignOutButton>
             <button type="button" className={styles.item} role="menuitem">
               Sign out

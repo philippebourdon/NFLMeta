@@ -3,6 +3,7 @@ import { apiAuthErrorResponse, authenticateApiKey, jsonApiError, jsonWithRateLim
 import { getLatestRosterYear, listApiRosterEntries } from "@/lib/customer-api-data";
 import { getDataSliceStatus } from "@/lib/data-status";
 import { findTeamByAbbr } from "@/lib/public-data";
+import { parseWeeklyRosterSelection, WEEKLY_ROSTER_WARNING } from '@/lib/weekly-roster-data';
 import { withApiErrorHandling } from "@/lib/api-route-error";
 
 function parseIntQuery(value: string | null, fallback: number, min: number, max: number): number {
@@ -33,6 +34,9 @@ async function handleGET(req: NextRequest, ctx: { params: Promise<{ abbr: string
     return jsonApiError(auth, 404, "not_found", "team not found");
   }
 
+  let weekly;
+  try { weekly = parseWeeklyRosterSelection(req.nextUrl.searchParams); }
+  catch (error) { return jsonApiError(auth,400,'invalid_request',(error as Error).message); }
   const year = await resolveYear(req);
   if (!year) {
     return jsonApiError(auth, 400, "invalid_request", "valid year is required");
@@ -43,6 +47,7 @@ async function handleGET(req: NextRequest, ctx: { params: Promise<{ abbr: string
   const withCount = req.nextUrl.searchParams.get("count") === "true";
   const result = await listApiRosterEntries({
     year,
+    ...(weekly ? {week:weekly.week,seasonType:weekly.seasonType} : {}),
     team: team.abbr,
     teamId: team.id,
     status: req.nextUrl.searchParams.get("status") || undefined,
@@ -52,7 +57,7 @@ async function handleGET(req: NextRequest, ctx: { params: Promise<{ abbr: string
     offset,
     withCount,
   });
-  const dataStatus = await getDataSliceStatus({
+  const dataStatus = weekly ? null : await getDataSliceStatus({
     datasetKey: "rosters",
     seasonYear: year,
     teamAbbr: team.abbr,
@@ -62,6 +67,7 @@ async function handleGET(req: NextRequest, ctx: { params: Promise<{ abbr: string
     data: result.rows,
     meta: {
       year,
+      ...(weekly ? {week:weekly.week,season_type:weekly.seasonType,snapshot_kind:'weekly_history',pre_kickoff_verified:false,warnings:[WEEKLY_ROSTER_WARNING]} : {}),
       team: team.abbr,
       total: result.total,
       limit,

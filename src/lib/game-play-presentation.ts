@@ -1,5 +1,20 @@
 import type { GameTimelinePlay } from "@/lib/plays-data";
 
+export function groupPlaysChronologically(plays: GameTimelinePlay[]): Array<[number | null, GameTimelinePlay[]]> {
+  const groups = new Map<number | null, GameTimelinePlay[]>();
+  for (const play of plays) {
+    const group = groups.get(play.quarter) || [];
+    group.push(play);
+    groups.set(play.quarter, group);
+  }
+  return [...groups.entries()]
+    .sort(([a], [b]) => (a ?? Number.POSITIVE_INFINITY) - (b ?? Number.POSITIVE_INFINITY))
+    .map(([quarter, quarterPlays]) => [
+      quarter,
+      quarterPlays.sort((a, b) => a.play_number - b.play_number),
+    ]);
+}
+
 export function quarterLabel(quarter: number | null): string {
   if (quarter == null) return "Game notes";
   if (quarter <= 4) return `Quarter ${quarter}`;
